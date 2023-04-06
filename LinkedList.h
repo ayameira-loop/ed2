@@ -7,20 +7,26 @@ private:
     };
 
     Node* head;
-    int count;
+    Node* tail;
+    int n;
 
 public:
     LinkedList();
     ~LinkedList();
-    void add(Item* item);
+    void enqueue(Item* item);
+    Item* dequeue();
+    void insert(int index, Item* item);
+    Item* remove(int index);
     bool isEmpty();
     int size();
     Item* at(int index);
+    Item* backOfTheLine();
+    Item* frontOfTheLine();
 };
 
 template<class Item>
 LinkedList<Item>::LinkedList() {
-    count = 0;
+    n = 0;
     head = nullptr;
 }
 
@@ -34,27 +40,97 @@ LinkedList<Item>::~LinkedList() {
 }
 
 template<class Item>
-void LinkedList<Item>::add(Item* item) {
+void LinkedList<Item>::enqueue(Item* item) {
     Node* newNode = new Node();
     newNode->value = item;
     newNode->next = head;
     head = newNode;
-    count++;
+    n++;
+}
+
+template<class Item>
+Item* LinkedList<Item>::dequeue() {
+    if (isEmpty()) {
+        throw std::out_of_range("Queue is empty");
+    }
+    Node* temp = head;
+    Node* prev = nullptr;
+    while (temp->next != nullptr) {
+        prev = temp;
+        temp = temp->next;
+    }
+    if (prev == nullptr) {
+        head = nullptr;
+    } else {
+        prev->next = nullptr;
+    }
+    Item* item = temp->value;
+    delete temp;
+    n--;
+    return item;
+}
+
+template<class Item>
+void LinkedList<Item>::insert(int index, Item* item) {
+    if (index < 0 || index >= n) {
+        throw std::out_of_range("Index out of range");
+    }
+    Node* newNode = new Node();
+    newNode->value = item;
+
+    if (index == 0) {
+        enqueue(item);
+        return;
+    }
+
+    Node* temp = head;
+    for (int i = 0; i < index-1; i++) {
+        temp = temp->next;
+    }
+    newNode->next = temp->next;
+    temp->next = newNode;
+    n++;
+}
+
+template<class Item>
+Item* LinkedList<Item>::remove(int index) {
+    if (index < 0 || index >= n) {
+        throw std::out_of_range("Index out of range");
+    }
+
+    Node* temp = head;
+    if (index == 0) {
+        Node* aux = head;
+        Item* item = aux->value;
+        head = head->next;
+        delete aux;
+        n--;
+        return item;
+    }
+    for (int i = 0; i < index-1; i++) {
+        temp = temp->next;
+    }
+    Node* aux = temp->next;
+    temp->next = aux->next;
+    Item* item = aux->value;
+    delete aux;
+    n--;
+    return item;
 }
 
 template<class Item>
 bool LinkedList<Item>::isEmpty() {
-    return count == 0;
+    return n == 0;
 }
 
 template<class Item>
 int LinkedList<Item>::size() {
-    return count;
+    return n;
 }
 
 template<class Item>
 Item* LinkedList<Item>::at(int index) {
-    if (index < 0 || index >= count) {
+    if (index < 0 || index >= n) {
         throw std::out_of_range("Index out of range");
     }
     Node* current = head;
@@ -63,3 +139,18 @@ Item* LinkedList<Item>::at(int index) {
     }
     return current->value;
 }
+
+template<class Item>
+Item* LinkedList<Item>::backOfTheLine() {
+    return head->value;
+}
+
+template<class Item>
+Item* LinkedList<Item>::frontOfTheLine() {
+    Node* temp = head;
+    while (temp->next != nullptr) {
+        temp = temp->next;
+    }
+    return temp->value;
+}
+

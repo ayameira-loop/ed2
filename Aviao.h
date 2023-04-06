@@ -1,9 +1,13 @@
+#ifndef AVIAO_H
+#define AVIAO_H
+
 class Aviao {
     private:
         std::string id;
         int combustivel;
         int tev; // tempo estimado de voo
         bool ehEmergencia;
+        int evento; // 0: pouso, 1: decolagem
         std::string generateRandomId() { // %c%c-%d%d%d
             char idChars[7];
             idChars[0] = rand() % 26 + 'A';
@@ -21,12 +25,24 @@ class Aviao {
             id = generateRandomId();
             combustivel = rand() % maxc + 1;
             tev = rand() % maxv + 1;
-            ehEmergencia = (rand() % 100 + 1) <= pe;
+            ehEmergencia = (static_cast<double>(std::rand()) / RAND_MAX) <= pe;
+            evento = rand() % 2;
         }
         void printInfo() {
             std::cout << "ID: " << id << std::endl;
             std::cout << "Combustivel: " << combustivel << std::endl;
             std::cout << "Tempo Estimado de Voo: " << tev << std::endl;
-            std::cout << "Emergencia: " << (ehEmergencia ? "Sim" : "Nao") << "\n" << std::endl;
+            std::cout << "Emergencia: " << (ehEmergencia ? "Sim" : "Nao") << std::endl;
+            std::cout << "Evento: " << (ehEmergencia ? "Decolagem" : "Pouso") << "\n" << std::endl;
+        }
+        std::string getID() {
+            return id;
+        }
+        int getEvento() {
+            return evento;
+        }
+        bool getEmergencia() {
+            return ehEmergencia;
         }
 };
+#endif

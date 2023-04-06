@@ -1,0 +1,9 @@
+addEmergency()
+
+add()
+- se for pouso:
+    - verifica se seguindo o fluxo normal da fila, vai conseguir pousar
+
+
+swap(int i, int j)
+    

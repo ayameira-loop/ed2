@@ -17,22 +17,30 @@ int main() {
 
     LinkedList<Aviao> listaDeAvioes;
 
-    Aviao aviaoA(C, V, pe);
-    Aviao aviaoB(C, V, pe);
-    Aviao aviaoC(C, V, pe);
-    Aviao aviaoD(C, V, pe);
-    listaDeAvioes.add(&aviaoA);
-    listaDeAvioes.add(&aviaoB);
-    listaDeAvioes.add(&aviaoC);
-    listaDeAvioes.add(&aviaoD);
-    std::cout << "Size of listaDeAvioes: " << listaDeAvioes.size() << std::endl;
-    std::cout << "Values in listaDeAvioes: ";
-    for (int i = 0; i < listaDeAvioes.size(); i++) {
-        // Aviao* aviaoPtr = listaDeAvioes.at(i);
-        // Aviao aviao = *aviaoPtr;
-        // aviao.printInfo();
-        listaDeAvioes.at(i)->printInfo();
+    int k = 3;
+    for (int i = 0; i < k; i++) {
+        Aviao* newAviao = new Aviao(C, V, pe);
+        newAviao->printInfo();
+        listaDeAvioes.enqueue(newAviao);
     }
+    //std::cout << "Size of listaDeAvioes: " << listaDeAvioes.size() << std::endl;
+    //std::cout << "Values in listaDeAvioes: ";
+    //for (int i = 0; i < listaDeAvioes.size(); i++) {
+    //    // Aviao* aviaoPtr = listaDeAvioes.at(i);
+    //    // Aviao aviao = *aviaoPtr;
+    //    // aviao.printInfo();
+    //    listaDeAvioes.at(i)->printInfo();
+    //}
+    
+    //std::cout << "front: " << listaDeAvioes.frontOfTheLine()->getID() << std::endl;
+    //std::cout << "back: " << listaDeAvioes.backOfTheLine()->getID() << std::endl;
+    int sz = listaDeAvioes.size();
+    std::cout << "size: " << sz << std::endl;
+    for (int i = 0; i < sz; i++) {
+        Aviao* aviao = listaDeAvioes.dequeue();
+        std::cout << "saiu: " << aviao->getID() << std::endl;
+    }
+
     std::cout << std::endl;
     return 0;
 }
