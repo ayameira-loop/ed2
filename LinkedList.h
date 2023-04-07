@@ -1,3 +1,6 @@
+#ifndef LINKEDLIST_H
+#define LINKEDLIST_H
+
 template<class Item>
 class LinkedList {
 private:
@@ -16,6 +19,7 @@ public:
     void enqueue(Item* item);
     Item* dequeue();
     void insert(int index, Item* item);
+    void insertEmergency(Item* item);
     Item* remove(int index);
     bool isEmpty();
     int size();
@@ -153,4 +157,19 @@ Item* LinkedList<Item>::frontOfTheLine() {
     }
     return temp->value;
 }
+
+template<class Item>
+void LinkedList<Item>::insertEmergency(Item* item) {
+    Node* newNode = new Node();
+    newNode->value = item;
+    newNode->next = nullptr;
+    Node* temp = head;
+    while (temp->next != nullptr) {
+        temp = temp->next;
+    }
+    temp->next = newNode;
+    n++;
+}
+
+#endif
 

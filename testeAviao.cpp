@@ -15,32 +15,25 @@ int main() {
 
     srand(123);
 
-    LinkedList<Aviao> listaDeAvioes;
+    LinkedList<Aviao> fila;
 
-    int k = 3;
+    int p1 = 0;
+    int p2 = 0;
+    int p3 = 0;
+    int k = 10;
     for (int i = 0; i < k; i++) {
         Aviao* newAviao = new Aviao(C, V, pe);
-        newAviao->printInfo();
-        listaDeAvioes.enqueue(newAviao);
-    }
-    //std::cout << "Size of listaDeAvioes: " << listaDeAvioes.size() << std::endl;
-    //std::cout << "Values in listaDeAvioes: ";
-    //for (int i = 0; i < listaDeAvioes.size(); i++) {
-    //    // Aviao* aviaoPtr = listaDeAvioes.at(i);
-    //    // Aviao aviao = *aviaoPtr;
-    //    // aviao.printInfo();
-    //    listaDeAvioes.at(i)->printInfo();
-    //}
-    
-    //std::cout << "front: " << listaDeAvioes.frontOfTheLine()->getID() << std::endl;
-    //std::cout << "back: " << listaDeAvioes.backOfTheLine()->getID() << std::endl;
-    int sz = listaDeAvioes.size();
-    std::cout << "size: " << sz << std::endl;
-    for (int i = 0; i < sz; i++) {
-        Aviao* aviao = listaDeAvioes.dequeue();
-        std::cout << "saiu: " << aviao->getID() << std::endl;
+        fila.enqueue(newAviao);
     }
 
-    std::cout << std::endl;
+    //std::cout << "apos insercao de emergencia: " << std::endl;
+    for (int i = fila.size()-1; i >= 0; i--) {
+        fila.at(i)->printInfo();
+    }
+
+    p1++;
+    p2++;
+    p3++;
+
     return 0;
 }

@@ -6,6 +6,8 @@ class Aviao {
         std::string id;
         int combustivel;
         int tev; // tempo estimado de voo
+        int tnf; // tempo na fila
+        int est; // estimativa de espera
         bool ehEmergencia;
         int evento; // 0: pouso, 1: decolagem
         std::string generateRandomId() { // %c%c-%d%d%d
@@ -25,15 +27,18 @@ class Aviao {
             id = generateRandomId();
             combustivel = rand() % maxc + 1;
             tev = rand() % maxv + 1;
+            tnf = 0;
+            est = 0;
             ehEmergencia = (static_cast<double>(std::rand()) / RAND_MAX) <= pe;
             evento = rand() % 2;
         }
         void printInfo() {
-            std::cout << "ID: " << id << std::endl;
-            std::cout << "Combustivel: " << combustivel << std::endl;
-            std::cout << "Tempo Estimado de Voo: " << tev << std::endl;
-            std::cout << "Emergencia: " << (ehEmergencia ? "Sim" : "Nao") << std::endl;
-            std::cout << "Evento: " << (ehEmergencia ? "Decolagem" : "Pouso") << "\n" << std::endl;
+            std::cout << "ID: " << id << " | " << "Combustivel: " << combustivel << " | " << "TEV: " << tev << " | " << "Emergencia: " << (ehEmergencia ? "Sim" : "Nao") << " | " << "Evento: " << (evento ? "Decolagem" : "Pouso") << " | TNF: " << tnf << " | EST: " << est << std::endl;
+            //std::cout << "ID: " << id << std::endl;
+            //std::cout << "Combustivel: " << combustivel << std::endl;
+            //std::cout << "Tempo Estimado de Voo: " << tev << std::endl;
+            //std::cout << "Emergencia: " << (ehEmergencia ? "Sim" : "Nao") << std::endl;
+            //std::cout << "Evento: " << (evento ? "Decolagem" : "Pouso") << "\n" << std::endl;
         }
         std::string getID() {
             return id;
@@ -41,8 +46,18 @@ class Aviao {
         int getEvento() {
             return evento;
         }
+        int getEst() {
+            return est;
+        }
         bool getEmergencia() {
             return ehEmergencia;
+        }
+        void atualizaCombustivel() {
+            tnf++;
+            combustivel--;
+        }
+        void setEst(int estimativa) {
+            est = estimativa;
         }
 };
 #endif
