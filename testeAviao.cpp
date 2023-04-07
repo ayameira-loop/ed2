@@ -20,14 +20,16 @@ int main() {
     int p1 = 0;
     int p2 = 0;
     int p3 = 0;
-    int k = 10;
+    int k = 3;
     for (int i = 0; i < k; i++) {
         Aviao* newAviao = new Aviao(C, V, pe);
+        newAviao->printInfo();
         fila.enqueue(newAviao);
     }
 
-    //std::cout << "apos insercao de emergencia: " << std::endl;
+    std::cout << "apos insercao de emergencia: " << std::endl;
     for (int i = fila.size()-1; i >= 0; i--) {
+        std::cout << i << std::endl;
         fila.at(i)->printInfo();
     }
 

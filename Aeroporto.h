@@ -11,16 +11,16 @@ private:
     Pista p1;
     Pista p2;
     Pista p3;
-    int npousos;
-    int ndecolagens;
+    int numeroDePousos;
+    int numeroDeDecolagens;
     void printEvento(int lane, std::string id, int evento) {
         std::cout << "A pista " << lane << " foi utilizada para " << (evento ? "Decolagem" : "Pouso") << " do voo " << id << std::endl;
     }
     
 public:
     Aeroporto() {
-        npousos = 0;
-        ndecolagens = 0;
+        numeroDePousos = 0;
+        numeroDeDecolagens = 0;
         p1 = {0, {0, 1}};
         p2 = {0, {0, 1}};
         p3 = {0, {1}}; // pouso só em emergência
@@ -28,15 +28,15 @@ public:
     ~Aeroporto() {}
     void incrementQueue(int evento) {
         if (evento == 1)
-            ndecolagens++;
+            numeroDeDecolagens++;
         else
-            npousos++;
+            numeroDePousos++;
     }
     void decrementQueue(int evento) {
         if (evento == 1)
-            ndecolagens--;
+            numeroDeDecolagens--;
         else
-            npousos--;
+            numeroDePousos--;
     }
     bool checkAvailable(int evento) {
         if (evento == 1) // decolagem
@@ -99,8 +99,8 @@ public:
     }
     void printStatus() {
         // Implementation of printStatus function
-        std::cout << "Fila de decolagem: " << ndecolagens << std::endl;
-        std::cout << "Fila de pouso: " << npousos << std::endl;
+        std::cout << "Fila de decolagem: " << numeroDeDecolagens << std::endl;
+        std::cout << "Fila de pouso: " << numeroDePousos << std::endl;
         std::cout << "Pista 1: " << getStatus(p1) << std::endl;
         std::cout << "Pista 2: " << getStatus(p2) << std::endl;
         std::cout << "Pista 3: " << getStatus(p3) << std::endl;
@@ -113,13 +113,32 @@ public:
         if (p3.status % 4 != 0) 
             p3.status++;
     }
-    int estimador(int evento) {
+    int getPousos() {
+        return numeroDePousos;
+    }
+    int getDecolagens() {
+        return numeroDeDecolagens;
+    }
+    int estimador(int evento, int npousos, int ndecolagens) {
         int temp1 = p1.status;
         int temp2 = p2.status;
         int temp3 = p3.status;
         int np = npousos;
         int nd = ndecolagens;
         int est = 0;
+
+        //if (np == 0 && nd == 0)
+        //    return est;
+        //
+        //if (temp1 % 4 == 0 && temp2 % 4 == 0 && ((np == 0 && nd == 1) || (np == 1 && nd == 0)))
+        //    return est;
+        //
+        //if (temp1 % 4 == 0 && temp3 % 4 == 0 && ((np == 1 && nd == 0)))
+        //    return est;
+        //
+        //if (temp2 % 4 == 0 && temp3 % 4 == 0 && ((np == 1 && nd == 0)))
+        //    return est;
+
         while (np > 0 || nd > 0) {
             if (np > 0) {
                 if (temp1 % 4 == 0) {
@@ -150,7 +169,7 @@ public:
             if (temp3 % 4 != 0) 
                 temp3++;
         }
-        return est+3;
+        return est;
     }
 };
 #endif
