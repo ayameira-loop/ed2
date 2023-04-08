@@ -57,24 +57,26 @@ int main() {
             // antecipa quem vai ficar sem combustivel antes da estimativa de tempo de espera
             // dá status de emergencia para quem ja esperou mais 10% do tempo estimado de voo
         for (int i = fila.size()-1; i >= 0; i--) {
-            if (fila.at(i)->getEvento() == 0) { 
+            Aviao* aviaoI = fila.at(i);
+            if (aviaoI->getEvento() == 0) { 
                 // se um avião que quer pousar vai ficar sem combustível, trocar por algum outro voo (decolagem qualquer ou pouso que tenha mais combustível)
                 int trocou = false;
-                if (fila.at(i)->getEst() > fila.at(i)->getCombustivel()) {
+                if (aviaoI->getEst() > aviaoI->getCombustivel()) {
                     for (int j = i+1; j < fila.size(); j++) {
-                        if (fila.at(j)->getEst() < fila.at(i)->getCombustivel()) {
-                            if (fila.at(j)->getEvento() == 0 && fila.at(j)->getCombustivel() > fila.at(i)->getCombustivel() ) {
+                        Aviao* aviaoJ = fila.at(j);
+                        if (aviaoJ->getEst() < aviaoI->getCombustivel()) {
+                            if (aviaoJ->getEvento() == 0 && aviaoJ->getCombustivel() > aviaoI->getCombustivel() ) {
                                 if (v) {
-                                    std::cout << "O aviao " << fila.at(i)->getID() << "[" << i << "] foi remanejado para a posicao [" << j << "] (Combustivel baixo)" << std::endl;
+                                    std::cout << "O aviao " << aviaoI->getID() << "[" << i << "] foi remanejado para a posicao [" << j << "] (Combustivel baixo)" << std::endl;
                                 }
                                 fila.moveTo(i, j);
                                 trocou = true;
                                 break;
                             }
-                            if (fila.at(j)->getEvento() == 1 && fila.at(j)->getTnf() < (fila.at(j)->getTev() * 0.1)) {
+                            if (aviaoJ->getEvento() == 1 && aviaoJ->getTnf() < (aviaoJ->getTev() * 0.1)) {
                                 // se o voo que vai ser preterido for decolagem, nao posso preterir se já tiver passado 10% do TEV na fila
                                 if (v) {
-                                    std::cout << "O aviao " << fila.at(i)->getID() << "[" << i << "] foi remanejado para a posicao [" << j << "] (Combustivel baixo)" << std::endl;
+                                    std::cout << "O aviao " << aviaoI->getID() << "[" << i << "] foi remanejado para a posicao [" << j << "] (Combustivel baixo)" << std::endl;
                                 }
                                 fila.moveTo(i, j);
                                 trocou = true;
@@ -83,22 +85,22 @@ int main() {
                         }
                     }
                     if (trocou == false) {
-                        std::cout << "Nao foi possivel fazer o remanejamento do " << fila.at(i)->getID() << " e o voo foi encaminhado para outro aeroporto" << std::endl;
-                        Aviao* aviao = fila.remove(i);
-                        int evento = aviao->getEvento();
+                        std::cout << "Nao foi possivel fazer o remanejamento do " << aviaoI->getID() << " e o voo foi encaminhado para outro aeroporto" << std::endl;
+                        fila.remove(i);
+                        int evento = aviaoI->getEvento();
                         aeroporto.decrementQueue(evento);
                     }
                 }
             }
-            if (fila.at(i)->getEvento() == 1) {
-                if (fila.at(i)->getEmergencia() == false && fila.at(i)->getTnf() > 0.1 * fila.at(i)->getTev()) {
-                    fila.at(i)->setEmergency();
+            if (aviaoI->getEvento() == 1) {
+                if (aviaoI->getEmergencia() == false && aviaoI->getTnf() > 0.1 * aviaoI->getTev()) {
+                    aviaoI->setEmergency();
                     int j = fila.size()-1;
                     while (fila.at(j)->getEmergencia()) { // checa o topo da fila ate achar o primeiro que nao seja emergencia
                         j--;
                     }
                     if (v)
-                        std::cout << "o aviao " << fila.at(i)->getID() << " ja esperou demais e foi colocado no comeco da fila" << std::endl;
+                        std::cout << "o aviao " << aviaoI->getID() << " ja esperou demais e foi colocado no comeco da fila" << std::endl;
                     fila.moveTo(i, j);
                 }
             }
@@ -107,8 +109,10 @@ int main() {
         int npousos = 0;
         int ndecolagens = 0;
         for (int i = fila.size()-1; i >= 0; i--) { // atualiza as estimativas 
-            fila.at(i)->setEst(aeroporto.estimador(fila.at(i)->getEvento(), npousos, ndecolagens));
-            if (fila.at(i)->getEvento() == 1)
+            Aviao* aviao = new Aviao(C, V, pe);
+
+            aviao->setEst(aeroporto.estimador(aviao->getEvento(), npousos, ndecolagens));
+            if (aviao->getEvento() == 1)
                 ndecolagens++;
             else
                 npousos++;
