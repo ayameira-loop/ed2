@@ -38,11 +38,8 @@ public:
         else
             numeroDePousos--;
     }
-    bool checkAvailable(int evento) {
-        if (evento == 1) // decolagem
-            return (p1.status % 4 == 0 || p2.status % 4 == 0 || p3.status % 4 == 0);
-        else
-            return (p1.status % 4 == 0 || p2.status % 4 == 0);
+    bool existsAvailable() {
+        return (p1.status % 4 == 0 || p2.status % 4 == 0 || p3.status % 4 == 0);
     }
     int useAvailable(Aviao aviao) {
         std::string id = aviao.getID();
@@ -50,7 +47,11 @@ public:
         bool ehEmergencia = aviao.getEmergencia();
 
         if (evento == 1) { // Decolagem
-            if (p1.status % 4 == 0) {
+            if (p3.status % 4 == 0) { // da prioridade para o p3 nas decolagens, para nao "gastar" o p1 ou p2 com um decolagem
+                p3.status++;
+                printEvento(3, id, evento);
+                return 3;
+            } else if (p1.status % 4 == 0) {
                 p1.status++;
                 printEvento(1, id, evento);
                 return 1;
@@ -58,10 +59,6 @@ public:
                 p2.status++;
                 printEvento(2, id, evento);
                 return 2;
-            } else if (p3.status % 4 == 0) {
-                p3.status++;
-                printEvento(3, id, evento);
-                return 3;
             }
         }
         if (evento == 0) { // Pouso

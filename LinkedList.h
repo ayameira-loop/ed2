@@ -19,6 +19,7 @@ public:
     void enqueue(Item* item);
     Item* dequeue();
     void insert(int index, Item* item);
+    void moveTo(int idx_moved, int idx_destination);
     void insertEmergency(Item* item);
     Item* remove(int index);
     bool isEmpty();
@@ -169,6 +170,14 @@ void LinkedList<Item>::insertEmergency(Item* item) {
     }
     temp->next = newNode;
     n++;
+}
+template<class Item>
+void LinkedList<Item>::moveTo(int idx_moved, int idx_destination) {
+    Item* item = remove(idx_moved);
+    if (idx_destination == size()) // se for do (tamanho da fila original - 1), coloca no topo
+        insertEmergency(item);
+    else
+        insert(idx_destination, item);
 }
 
 #endif

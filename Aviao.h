@@ -51,8 +51,14 @@ class Aviao {
         int getEst() {
             return est;
         }
+        int getEstIni() {
+            return estIni;
+        }
         int getTnf() {
             return tnf;
+        }
+        int getTev() {
+            return tev;
         }
         int getCombustivel() {
             return combustivel;

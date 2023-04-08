@@ -20,22 +20,25 @@ int main() {
     int p1 = 0;
     int p2 = 0;
     int p3 = 0;
-    int k = 3;
+    int k = 5;
     for (int i = 0; i < k; i++) {
         Aviao* newAviao = new Aviao(C, V, pe);
-        newAviao->printInfo();
         fila.enqueue(newAviao);
     }
-
-    std::cout << "apos insercao de emergencia: " << std::endl;
+    std::cout << "antes" << std::endl;
     for (int i = fila.size()-1; i >= 0; i--) {
-        std::cout << i << std::endl;
+        std::cout << i << " - ";
         fila.at(i)->printInfo();
     }
 
-    p1++;
-    p2++;
-    p3++;
+
+    fila.moveTo(4,3);
+    std::cout << "depois" << std::endl;
+    for (int i = fila.size()-1; i >= 0; i--) {
+        std::cout << i << " - ";
+        fila.at(i)->printInfo();
+    }
+
 
     return 0;
 }
