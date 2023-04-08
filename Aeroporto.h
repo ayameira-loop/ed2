@@ -41,7 +41,7 @@ public:
     bool existsAvailable() {
         return (p1.status % 4 == 0 || p2.status % 4 == 0 || p3.status % 4 == 0);
     }
-    int useAvailable(Aviao aviao) {
+    int useAvailable(Aviao aviao, bool verbose) {
         std::string id = aviao.getID();
         int evento = aviao.getEvento();
         bool ehEmergencia = aviao.getEmergencia();
@@ -49,34 +49,39 @@ public:
         if (evento == 1) { // Decolagem
             if (p3.status % 4 == 0) { // da prioridade para o p3 nas decolagens, para nao "gastar" o p1 ou p2 com um decolagem
                 p3.status++;
-                printEvento(3, id, evento);
+                if (verbose)
+                    printEvento(3, id, evento);
                 return 3;
             } else if (p1.status % 4 == 0) {
                 p1.status++;
-                printEvento(1, id, evento);
+                if (verbose)
+                    printEvento(1, id, evento);
                 return 1;
             } else if (p2.status % 4 == 0) {
                 p2.status++;
-                printEvento(2, id, evento);
+                if (verbose)
+                    printEvento(2, id, evento);
                 return 2;
             }
         }
         if (evento == 0) { // Pouso
             if (p1.status % 4 == 0) {
                 p1.status++;
-                printEvento(1, id, evento);
+                if (verbose)
+                    printEvento(1, id, evento);
                 return 1;
             } else if (p2.status % 4 == 0) {
                 p2.status++;
-                printEvento(2, id, evento);
+                if (verbose)
+                    printEvento(2, id, evento);
                 return 2;
             }
         }
         if (ehEmergencia) {
             if (p3.status % 4 == 0) {
                 p3.status++;
-                std::cout << "EMERGENCIA" << std::endl;
-                printEvento(3, id, evento);
+                if (verbose)
+                    printEvento(3, id, evento);
                 return 3;
             }
         }
