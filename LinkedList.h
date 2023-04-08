@@ -78,7 +78,7 @@ Item* LinkedList<Item>::dequeue() {
 template<class Item>
 void LinkedList<Item>::insert(int index, Item* item) {
     if (index < 0 || index >= n) {
-        throw std::out_of_range("Index out of range");
+        throw std::out_of_range("Index out of range (insert)");
     }
     Node* newNode = new Node();
     newNode->value = item;
@@ -100,7 +100,7 @@ void LinkedList<Item>::insert(int index, Item* item) {
 template<class Item>
 Item* LinkedList<Item>::remove(int index) {
     if (index < 0 || index >= n) {
-        throw std::out_of_range("Index out of range");
+        throw std::out_of_range("Index out of range (remove)");
     }
 
     Node* temp = head;
@@ -136,7 +136,7 @@ int LinkedList<Item>::size() {
 template<class Item>
 Item* LinkedList<Item>::at(int index) {
     if (index < 0 || index >= n) {
-        throw std::out_of_range("Index out of range");
+        throw std::out_of_range("Index out of range (at)");
     }
     Node* current = head;
     for (int i = 0; i < index; i++) {
@@ -173,8 +173,8 @@ void LinkedList<Item>::insertEmergency(Item* item) {
 }
 template<class Item>
 void LinkedList<Item>::moveTo(int idx_moved, int idx_destination) {
-    Item* item = remove(idx_moved);
-    if (idx_destination == size()) // se for do (tamanho da fila original - 1), coloca no topo
+    Item* item = remove(idx_moved); // n--;
+    if (idx_destination == size()) // se for do tamanho, coloca no topo
         insertEmergency(item);
     else
         insert(idx_destination, item);

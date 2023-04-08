@@ -73,8 +73,8 @@ class Aviao {
         void setEst(int estimativa) {
             est = estimativa;
         }
-        void setEstIni(int estimativa) {
-            estIni = estimativa;
+        void setEmergency() {
+            ehEmergencia = true;
         }
 };
 #endif

@@ -4,6 +4,28 @@
 #include "Aviao.h"
 #include "LinkedList.h"
 
+int calculaMediaCombustivelEspera(LinkedList<Aviao> fila) {
+    int totalComb = 0; // total de combustivel dos avioes esperando para pousar
+    int npousos = 0; // n de avioes esperando para pousar
+    for (int i = fila.size()-1; i >= 0; i--) { // atualiza as estimativas 
+        std::cout << i << std::endl;
+
+        if (fila.at(i)->getEvento() == 0) {
+            totalComb = totalComb + fila.at(i)->getCombustivel();
+            npousos++;
+        }
+    }
+    if (npousos > 0) {
+        std::cout << "resp : " << totalComb / npousos << std::endl;
+        return totalComb / npousos;
+    }
+    else {
+        std::cout << 0 << std::endl;
+        return 0;
+    }
+}
+
+
 int main() {
     int T = 50; // unidades de tempo de simula ̧c ̃ao;
     int K = 4; // n ́umero m ́aximo de avi ̃oes que chegam no aeroporto em cada unidade de tempo;
@@ -31,14 +53,8 @@ int main() {
         fila.at(i)->printInfo();
     }
 
+    calculaMediaCombustivelEspera(fila);
+    //std::cout << res << std::endl;
 
-    fila.moveTo(4,3);
-    std::cout << "depois" << std::endl;
-    for (int i = fila.size()-1; i >= 0; i--) {
-        std::cout << i << " - ";
-        fila.at(i)->printInfo();
-    }
-
-
-    return 0;
+    
 }
