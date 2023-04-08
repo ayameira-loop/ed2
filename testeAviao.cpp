@@ -26,9 +26,9 @@ int calculaMediaCombustivelEspera(LinkedList<Aviao> fila) {
     }
 }
 
-void addNewPlanes(int k, LinkedList<Aviao>& fila, Aeroporto& aeroporto, int C, int V, float pe) {
+void addNewPlanes(int k, LinkedList<Aviao>& fila, Aeroporto& aeroporto, int C, int V, float pe, float pp) {
     for (int i = 0; i < k; i++) {
-        Aviao* novoAviao = new Aviao(C, V, pe);
+        Aviao* novoAviao = new Aviao(C, V, pe, pp);
         if (novoAviao->getEmergencia()) { 
             // se for emergencia, avião tem que receber autorização imediata para utilizar a pista
             fila.insertEmergency(novoAviao);
@@ -42,7 +42,7 @@ void addNewPlanes(int k, LinkedList<Aviao>& fila, Aeroporto& aeroporto, int C, i
 
 void printAllStatus(LinkedList<Aviao>& fila, Aeroporto& aeroporto, bool v, bool vv) {
     if (v)
-        aeroporto.printStatus();
+        aeroporto.printStatus(v);
     if (vv) {
         for (int i = fila.size()-1; i >= 0; i--) {
             std::cout << i << " - ";
@@ -143,7 +143,7 @@ void useLanes(LinkedList<Aviao>& fila, Aeroporto& aeroporto, int& nTotalEmerg, i
 int main() {
     int T = 50; // unidades de tempo de simula ̧c ̃ao;
     int K = 4; // n ́umero m ́aximo de avi ̃oes que chegam no aeroporto em cada unidade de tempo;
-    float pp = 0.5;// probabilidade de ser um pouso;
+    float pp = 0.1;// probabilidade de ser um pouso;
     float pd = 1 - pp;// probabilidade de ser decolagem (1.0 − pp);
     int pe = 0.03; // probabilidade de ser emergˆencia;
     int C = 20; // tempo m ́aximo de combust ́ıvel de um avi ̃ao que deseja pousar;
@@ -168,6 +168,15 @@ int main() {
     bool verbose = true;
     bool veryVerbose = true; 
 
+    addNewPlanes(100, fila, aeroporto, C, V, pe, pp);
+
+
+
+    printAllStatus(fila, aeroporto, verbose, veryVerbose);
+
+    
+
+    /*
     addNewPlanes(k, fila, aeroporto, C, V, pe);
     std::cout << "ANTES" << std::endl;
     printAllStatus(fila, aeroporto, verbose, veryVerbose);
@@ -182,6 +191,7 @@ int main() {
     std::cout << "nTotalD: " << nTotalD << std::endl;
     std::cout << "nTotalP: " << nTotalP << std::endl;
     std::cout << "nTotalEmerg: " << nTotalEmerg << std::endl;
+    */
 
     
     

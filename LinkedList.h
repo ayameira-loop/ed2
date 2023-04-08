@@ -25,8 +25,6 @@ public:
     bool isEmpty();
     int size();
     Item* at(int index);
-    Item* backOfTheLine();
-    Item* frontOfTheLine();
 };
 
 template<class Item>
@@ -146,24 +144,15 @@ Item* LinkedList<Item>::at(int index) {
 }
 
 template<class Item>
-Item* LinkedList<Item>::backOfTheLine() {
-    return head->value;
-}
-
-template<class Item>
-Item* LinkedList<Item>::frontOfTheLine() {
-    Node* temp = head;
-    while (temp->next != nullptr) {
-        temp = temp->next;
-    }
-    return temp->value;
-}
-
-template<class Item>
 void LinkedList<Item>::insertEmergency(Item* item) {
     Node* newNode = new Node();
     newNode->value = item;
     newNode->next = nullptr;
+    if (size() == 0) {
+        head = newNode;
+        n++;
+        return;
+    }
     Node* temp = head;
     while (temp->next != nullptr) {
         temp = temp->next;

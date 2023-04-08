@@ -1,6 +1,8 @@
 #ifndef AVIAO_H
 #define AVIAO_H
 
+#include <random>
+
 class Aviao {
     private:
         std::string id;
@@ -8,7 +10,6 @@ class Aviao {
         int tev; // tempo estimado de voo
         int tnf; // tempo na fila
         int est; // estimativa de espera
-        int estIni; // estimativa de espera
         bool ehEmergencia;
         int evento; // 0: pouso, 1: decolagem
         std::string generateRandomId() { // %c%c-%d%d%d
@@ -24,18 +25,17 @@ class Aviao {
         }
 
     public:
-        Aviao(int maxc, int maxv, float pe) {
+        Aviao(int maxc, int maxv, float pe, float pp) {
             id = generateRandomId();
             combustivel = rand() % maxc + 1;
             tev = rand() % maxv + 1;
             tnf = 0;
             est = 0;
-            estIni = 0;
             ehEmergencia = (static_cast<double>(std::rand()) / RAND_MAX) <= pe;
-            evento = rand() % 2;
+            evento = (static_cast<double>(std::rand()) / RAND_MAX) > pp;
         }
         void printInfo() {
-            std::cout << "ID: " << id << " | " << "Combustivel: " << combustivel << " | " << "TEV: " << tev << " | " << "Emergencia: " << (ehEmergencia ? "Sim" : "Nao") << " | " << "Evento: " << (evento ? "Decolagem" : "Pouso") << " | TNF: " << tnf << " | EST: " << est << " | ESTINI: " << estIni << std::endl;
+            std::cout << "ID: " << id << " | " << "Combustivel: " << combustivel << " | " << "TEV: " << tev << " | " << "Emergencia: " << (ehEmergencia ? "Sim" : "Nao") << " | " << "Evento: " << (evento ? "Decolagem" : "Pouso") << " | TNF: " << tnf << " | EST: " << est << std::endl;
             //std::cout << "ID: " << id << std::endl;
             //std::cout << "Combustivel: " << combustivel << std::endl;
             //std::cout << "Tempo Estimado de Voo: " << tev << std::endl;
@@ -50,9 +50,6 @@ class Aviao {
         }
         int getEst() {
             return est;
-        }
-        int getEstIni() {
-            return estIni;
         }
         int getTnf() {
             return tnf;

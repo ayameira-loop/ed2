@@ -99,13 +99,14 @@ public:
                 return "manutencao (2)";
         }
     }
-    void printStatus() {
-        // Implementation of printStatus function
+    void printStatus(bool v) {
         std::cout << "Fila de decolagem: " << numeroDeDecolagens << std::endl;
         std::cout << "Fila de pouso: " << numeroDePousos << std::endl;
-        std::cout << "Pista 1: " << getStatus(p1) << std::endl;
-        std::cout << "Pista 2: " << getStatus(p2) << std::endl;
-        std::cout << "Pista 3: " << getStatus(p3) << std::endl;
+        if (v) {
+            std::cout << "Pista 1: " << getStatus(p1) << std::endl;
+            std::cout << "Pista 2: " << getStatus(p2) << std::endl;
+            std::cout << "Pista 3: " << getStatus(p3) << std::endl;
+        }
     }
     void updateStatusPistas() {
         if (p1.status % 4 != 0) 
@@ -128,18 +129,6 @@ public:
         int np = npousos;
         int nd = ndecolagens;
         int est = 0;
-
-        //if (np == 0 && nd == 0)
-        //    return est;
-        //
-        //if (temp1 % 4 == 0 && temp2 % 4 == 0 && ((np == 0 && nd == 1) || (np == 1 && nd == 0)))
-        //    return est;
-        //
-        //if (temp1 % 4 == 0 && temp3 % 4 == 0 && ((np == 1 && nd == 0)))
-        //    return est;
-        //
-        //if (temp2 % 4 == 0 && temp3 % 4 == 0 && ((np == 1 && nd == 0)))
-        //    return est;
 
         while (np > 0 || nd > 0) {
             if (np > 0) {
