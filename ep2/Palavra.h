@@ -13,7 +13,9 @@ public:
         numLetras = 0;
         numVogaisSemRepeticao = 0;
     }
-
+    void addOcorrencia() {
+        ocorrencias++;
+    }
     int getOcorrencias() { return ocorrencias; }
     int getNumLetras() { return numLetras; }
     int getNumVogaisSemRepeticao() { return numVogaisSemRepeticao; }
@@ -32,7 +34,7 @@ private:
     int numVogaisSemRepeticao;
 
     void calcularAtributos(const std::string& palavra) {
-        ocorrencias = 0;
+        ocorrencias = 1;
         numLetras = palavra.size();
         numVogaisSemRepeticao = calcularNumVogaisSemRepeticao(palavra);  // numero de vogais distintas em uma palavra
     }

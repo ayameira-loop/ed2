@@ -4,31 +4,31 @@
 #include "VetorDinamicoOrdenado.h"
 
 int main() {
-    VetorDinamicoOrdenado<int, std::string> vdo;
+    VetorDinamicoOrdenado<std::string, int> vdo;
 
     std::cout << "primeiro" << std::endl;
-    vdo.add(1, "A");
-    vdo.show();
+    vdo.add("ao", 1);
+    //vdo.show();
 
     std::cout << "segundo" << std::endl;
-    vdo.add(4, "D");
-    vdo.show();
+    vdo.add("roeu", 2);
+    //vdo.show();
 
     std::cout << "terceiro" << std::endl;
-    vdo.add(6, "B");
-    vdo.show();
+    vdo.add("as", 3);
+    //vdo.show();
 
     std::cout << "quarto" << std::endl;
-    vdo.add(3, "C");
+    vdo.add("frias", 4);
     vdo.show();
 
-    std::cout << "quinto" << std::endl;
-    vdo.add(6, "E");
+    std::cout << "quint" << std::endl;
+    vdo.add("carnes", 5);
     vdo.show();
 
-    std::cout << "valor do primeiro: " << vdo.value(1) << std::endl;
-    std::cout << "valor do meio: " << vdo.value(3) << std::endl;
-    std::cout << "valor do ultimo: " << vdo.value(6) << std::endl;
+    //std::cout << "valor do primeiro: " << vdo.value(1) << std::endl;
+    //std::cout << "valor do meio: " << vdo.value(3) << std::endl;
+    //std::cout << "valor do ultimo: " << vdo.value(6) << std::endl;
 
     return 0;
 }
