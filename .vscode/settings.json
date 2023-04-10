@@ -44,7 +44,8 @@
         "stdio.h": "c",
         "stdlib.h": "c",
         "aeroporto.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "unordered_set": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled"
 }

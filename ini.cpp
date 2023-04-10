@@ -10,8 +10,8 @@ void addNewPlanes(int k, LinkedList<Aviao>& fila, Aeroporto& aeroporto, int C, i
 void printAllStatus(LinkedList<Aviao>& fila, Aeroporto& aeroporto, bool v, bool vv);
 void treatExceptions(LinkedList<Aviao>& fila, Aeroporto& aeroporto, bool v, bool vv);
 void updateEstimates(LinkedList<Aviao>& fila, Aeroporto& aeroporto);
-void useLanes(LinkedList<Aviao>& fila, Aeroporto& aeroporto, int& nTotalEmerg, int& tempoTotalEsperaD, int& nTotalD, int& nTotalP, int& tempoTotalEsperaP, int& qtdTotalCombustivel, bool v);
-void printSummary(LinkedList<Aviao>& fila, int nTotalEmerg, int tempoTotalEsperaD, int nTotalD, int nTotalP, int tempoTotalEsperaP, int qtdTotalCombustivel);
+void useLanes(LinkedList<Aviao>& fila, Aeroporto& aeroporto, int& emergenciaIt, int& nTotalEmerg, int& tempoTotalEsperaD, int& nTotalD, int& nTotalP, int& tempoTotalEsperaP, int& qtdTotalCombustivel, bool v);
+void printSummary(LinkedList<Aviao>& fila, Aeroporto aeroporto, int emergenciaIt, int nTotalEmerg, int tempoTotalEsperaD, int nTotalD, int nTotalP, int tempoTotalEsperaP, int qtdTotalCombustivel);
 
 int main(int argc, char* argv[]) {
     // [T, K, pp, pe, C, V, verbose, veryVerbose]
@@ -63,14 +63,14 @@ int main(int argc, char* argv[]) {
 
     while (t < T) {
         int k = rand() % K + 1; // sorteia # de aviões que informam que querem decolar/pousar em t
+        int emergenciaIt = 0; // conta as emergencias que ocorreram nesta iteração
         if (verbose)
-            std::cout << "TEMPO: " << t << " | adiciona " << k << std::endl;
+            std::cout << "TEMPO: " << t << " | Adiciona " << k << " aviao(oes)" << "\n\n";
 
         addNewPlanes(k, fila, aeroporto, C, V, pe, pp);
-        printAllStatus(fila, aeroporto, verbose, veryVerbose);
         treatExceptions(fila, aeroporto, verbose, veryVerbose);
         updateEstimates(fila, aeroporto);
-        useLanes(fila, aeroporto, nTotalEmerg, tempoTotalEsperaD, nTotalD, nTotalP, tempoTotalEsperaP, qtdTotalCombustivel, verbose);
+        useLanes(fila, aeroporto, emergenciaIt, nTotalEmerg, tempoTotalEsperaD, nTotalD, nTotalP, tempoTotalEsperaP, qtdTotalCombustivel, verbose);
         updateEstimates(fila, aeroporto);
 
         // atualiza os valores da iteração (diminui o combustível em uma unidade e incrementa o contador do status das pistas)
@@ -79,12 +79,10 @@ int main(int argc, char* argv[]) {
         }
         aeroporto.updateStatusPistas();
         t++;
+        if (t == T - 1)
+            verbose = true;
         if (verbose)
-            printSummary(fila, nTotalEmerg, tempoTotalEsperaD, nTotalD, nTotalP, tempoTotalEsperaP, qtdTotalCombustivel);
-        if (t == T - 1) {
-            aeroporto.printStatus(verbose);
-            printSummary(fila, nTotalEmerg, tempoTotalEsperaD, nTotalD, nTotalP, tempoTotalEsperaP, qtdTotalCombustivel);
-        }
+            printSummary(fila, aeroporto, emergenciaIt, nTotalEmerg, tempoTotalEsperaD, nTotalD, nTotalP, tempoTotalEsperaP, qtdTotalCombustivel);
     }
 
     return 0;
@@ -108,8 +106,10 @@ void addNewPlanes(int k, LinkedList<Aviao>& fila, Aeroporto& aeroporto, int C, i
 }
 
 void printAllStatus(LinkedList<Aviao>& fila, Aeroporto& aeroporto, bool v, bool vv) {
-    if (v)
+    if (v) {
         aeroporto.printStatus(v);
+        
+    }
     if (vv) {
         for (int i = fila.size()-1; i >= 0; i--) {
             std::cout << i << " - ";
@@ -184,7 +184,7 @@ void updateEstimates(LinkedList<Aviao>& fila, Aeroporto& aeroporto) {
             npousos++;
     }
 }
-void useLanes(LinkedList<Aviao>& fila, Aeroporto& aeroporto, int& nTotalEmerg, int& tempoTotalEsperaD, int& nTotalD, int& nTotalP, int& tempoTotalEsperaP, int& qtdTotalCombustivel, bool v) {
+void useLanes(LinkedList<Aviao>& fila, Aeroporto& aeroporto, int& emergenciaIt, int& nTotalEmerg, int& tempoTotalEsperaD, int& nTotalD, int& nTotalP, int& tempoTotalEsperaP, int& qtdTotalCombustivel, bool v) {
     // uso das pistas até que não haja nenhum avião na fila ou não haja pista disponível
     // pega o primeiro
     // tenta useAvailable()
@@ -195,8 +195,10 @@ void useLanes(LinkedList<Aviao>& fila, Aeroporto& aeroporto, int& nTotalEmerg, i
         int pistaDisponivel = aeroporto.useAvailable(*aviao, v);
         if (pistaDisponivel != -1) {
             Aviao* aviao = fila.remove(idx);
-            if (aviao->getEmergencia())
+            if (aviao->getEmergencia()) {
                 nTotalEmerg++;
+                emergenciaIt++;
+            }
             int evento = aviao->getEvento();
             aeroporto.decrementQueue(evento);
             if (evento == 1) {
@@ -211,8 +213,28 @@ void useLanes(LinkedList<Aviao>& fila, Aeroporto& aeroporto, int& nTotalEmerg, i
         }
         idx--;
     }
+    if (v)
+        std::cout << std::endl;
 }
-void printSummary(LinkedList<Aviao>& fila, int nTotalEmerg, int tempoTotalEsperaD, int nTotalD, int nTotalP, int tempoTotalEsperaP, int qtdTotalCombustivel) {
+void printSummary(LinkedList<Aviao>& fila, Aeroporto aeroporto, int emergenciaIt, int nTotalEmerg, int tempoTotalEsperaD, int nTotalD, int nTotalP, int tempoTotalEsperaP, int qtdTotalCombustivel) {
+    std::cout << "Fila de pouso: " << aeroporto.getPousos() << std::endl;
+    for (size_t i = 0; i < fila.size(); i++)
+    {   
+        Aviao* aviaoI = fila.at(i);
+        if (aviaoI->getEvento() == false)
+            aviaoI->printInfo();
+    }
+    std::cout << std::endl;
+    
+    std::cout << "Fila de decolagem: " << aeroporto.getDecolagens() << std::endl;
+    for (size_t i = 0; i < fila.size(); i++)
+    {   
+        Aviao* aviaoI = fila.at(i);
+        if (aviaoI->getEvento())
+            aviaoI->printInfo();
+    }
+    std::cout << std::endl;
+        
     int totalComb = 0; // total de combustivel dos avioes esperando para pousar
     int n_pousos = 0; // n de avioes esperando para pousar
     for (int i = fila.size()-1; i >= 0; i--) { // atualiza as estimativas 
@@ -221,18 +243,20 @@ void printSummary(LinkedList<Aviao>& fila, int nTotalEmerg, int tempoTotalEspera
             n_pousos++;
         }
     }
-    if (nTotalD > 0) {
-        std::cout << "Tempo medio de espera para decolagem: " << static_cast<float>(tempoTotalEsperaD) / nTotalD << std::endl;
-    } 
     if (nTotalP > 0) {
         std::cout << "Tempo medio de espera para pouso: " << static_cast<float>(tempoTotalEsperaP) / nTotalP << std::endl;
+    } 
+    if (nTotalD > 0) {
+        std::cout << "Tempo medio de espera para decolagem: " << static_cast<float>(tempoTotalEsperaD) / nTotalD << std::endl;
     } 
     if (n_pousos > 0)
         std::cout << "Qtd media de combustivel dos avioes esperando para pousar: " << static_cast<float>(totalComb) / n_pousos << std::endl;
     if (nTotalP > 0) {
         std::cout << "Qtd media de combustivel disponivel dos avioes que pousaram: " << static_cast<float>(qtdTotalCombustivel) / nTotalP << std::endl;
     }
-    std::cout << "TOTAIS" << std::endl;
+    std::cout << "Qtd de avioes pousando/decolando em situacao de emergencia: " << emergenciaIt << std::endl;
+
+    std::cout << "\n" << "TOTAIS:" << std::endl;
     std::cout << "# Pousos realizados: " << nTotalP << std::endl;
     std::cout << "# Decolagens realizadas: " << nTotalD << std::endl;
     std::cout << "# de pousos/decolagens de emergencia: " << nTotalEmerg << std::endl;

@@ -2,6 +2,7 @@
 #define AVIAO_H
 
 #include <random>
+#include <string>
 
 class Aviao {
     private:

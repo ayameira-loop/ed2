@@ -11,16 +11,16 @@ private:
     Pista p1;
     Pista p2;
     Pista p3;
-    int numeroDePousos;
-    int numeroDeDecolagens;
+    int filaDePouso;
+    int filaDeDecolagem;
     void printEvento(int lane, std::string id, int evento) {
         std::cout << "A pista " << lane << " foi utilizada para " << (evento ? "Decolagem" : "Pouso") << " do voo " << id << std::endl;
     }
     
 public:
     Aeroporto() {
-        numeroDePousos = 0;
-        numeroDeDecolagens = 0;
+        filaDePouso = 0;
+        filaDeDecolagem = 0;
         p1 = {0, {0, 1}};
         p2 = {0, {0, 1}};
         p3 = {0, {1}}; // pouso só em emergência
@@ -28,15 +28,15 @@ public:
     ~Aeroporto() {}
     void incrementQueue(int evento) {
         if (evento == 1)
-            numeroDeDecolagens++;
+            filaDeDecolagem++;
         else
-            numeroDePousos++;
+            filaDePouso++;
     }
     void decrementQueue(int evento) {
         if (evento == 1)
-            numeroDeDecolagens--;
+            filaDeDecolagem--;
         else
-            numeroDePousos--;
+            filaDePouso--;
     }
     bool existsAvailable() {
         return (p1.status % 4 == 0 || p2.status % 4 == 0 || p3.status % 4 == 0);
@@ -100,12 +100,11 @@ public:
         }
     }
     void printStatus(bool v) {
-        std::cout << "Fila de decolagem: " << numeroDeDecolagens << std::endl;
-        std::cout << "Fila de pouso: " << numeroDePousos << std::endl;
         if (v) {
             std::cout << "Pista 1: " << getStatus(p1) << std::endl;
             std::cout << "Pista 2: " << getStatus(p2) << std::endl;
             std::cout << "Pista 3: " << getStatus(p3) << std::endl;
+            std::cout << std::endl;
         }
     }
     void updateStatusPistas() {
@@ -117,10 +116,10 @@ public:
             p3.status++;
     }
     int getPousos() {
-        return numeroDePousos;
+        return filaDePouso;
     }
     int getDecolagens() {
-        return numeroDeDecolagens;
+        return filaDeDecolagem;
     }
     int estimador(int evento, int npousos, int ndecolagens) {
         int temp1 = p1.status;
