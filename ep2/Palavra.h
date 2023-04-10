@@ -28,6 +28,10 @@ public:
         return oss.str();
     }
 
+    void setOcorrencia(int num) {
+        ocorrencias = num;
+    }
+
 private:
     int ocorrencias;
     int numLetras;

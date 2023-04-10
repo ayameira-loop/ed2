@@ -11,7 +11,7 @@ int main() {
     int N;
     cout << "N: ";
     cin >> N;
-
+    std::cout << std::endl;
     std::string words[N];
 
     for (int i = 0; i < N; i++) {
@@ -27,7 +27,12 @@ int main() {
         vdo.add(words[i], p);
     }
     
-    vdo.show();
+    vdo.mostFrequent();
+
+    int n = vdo.getFrequency("as");
+    std::cout << n << endl;
+
+    vdo.longest();
 
     return 0;
 }
