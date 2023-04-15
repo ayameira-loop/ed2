@@ -6,6 +6,8 @@
 #include "Aviao.h"
 #include "Aeroporto.h"
 
+#define SEED 123
+
 void addNewPlanes(int k, LinkedList<Aviao>& fila, Aeroporto& aeroporto, int C, int V, float pe, float pp);
 void printAllStatus(LinkedList<Aviao>& fila, Aeroporto& aeroporto, bool v, bool vv);
 void treatExceptions(LinkedList<Aviao>& fila, Aeroporto& aeroporto, bool v, bool vv);
@@ -27,28 +29,18 @@ int main(int argc, char* argv[]) {
     int verbose;
     int veryVerbose;
     if (argc == 9) {
-        T = atoi(argv[1]);
-        K = atoi(argv[2]); 
-        pp = atof(argv[3]);
-        pd = 1 - pp;
-        pe = atof(argv[4]); 
-        C = atoi(argv[5]); 
-        V = atoi(argv[6]); 
+        T = atoi(argv[1]);// unidades de tempo de simula ̧c ̃ao;
+        K = atoi(argv[2]); // n ́umero m ́aximo de avioes que chegam no aeroporto em cada unidade de tempo;
+        pp = atof(argv[3]);// probabilidade de ser um pouso;
+        pd = 1 - pp;// probabilidade de ser decolagem (1.0 − pp);
+        pe = atof(argv[4]); // probabilidade de ser emergˆencia;
+        C = atoi(argv[5]); // tempo m ́aximo de combustivel de um avi ̃ao que deseja pousar;
+        V = atoi(argv[6]); // tempo m ́aximo de voo de uma decolagem.
         verbose = atoi(argv[7]);
         veryVerbose = atoi(argv[8]);
-    } else {
-        T = 200; // unidades de tempo de simula ̧c ̃ao;
-        K = 2; // n ́umero m ́aximo de avioes que chegam no aeroporto em cada unidade de tempo;
-        pp = 0.75;// probabilidade de ser um pouso;
-        pd = 1 - pp;// probabilidade de ser decolagem (1.0 − pp);
-        pe = 0.05; // probabilidade de ser emergˆencia;
-        C = 75; // tempo m ́aximo de combustivel de um avi ̃ao que deseja pousar;
-        V = 1000; // tempo m ́aximo de voo de uma decolagem.
-        verbose = false;
-        veryVerbose = false;
     }
 
-    srand(123);
+    srand(SEED);
     int t = 0;
 
     int tempoTotalEsperaP = 0;
