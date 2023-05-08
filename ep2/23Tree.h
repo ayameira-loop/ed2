@@ -4,45 +4,148 @@ template<class Key, class Item>
 class A23 {
     private:
         class Node {
-        public
-        if (key > root->key2):
-            Key ke21, key2;
-            I2em val1, val2;
-            Node* left;
-            Node* middle;
-            Node* right;
+        public:
+            Key key1, key2;
+            Item val1, val2;
+            Node* p1;
+            Node* p2;
+            Node* p3;
             bool eh2no;
+            bool cresceu;
             Node(Key key, Item val) {
                 this->key1 = key;
                 this->val1 = val;
-                left = nullptr;
-                middle = nullptr;
-                right = nullptr;
+                p1 = nullptr;
+                p2 = nullptr;
+                p3 = nullptr;
                 eh2no = true;
             }
         };
         Node* root;
         void destroyTree(Node* root) {
             if (root != nullptr) {
-                destroyTree(root->left);
-                destroyTree(root->middle);
-                destroyTree(root->right);
+                destroyTree(root->p1);
+                destroyTree(root->p2);
+                destroyTree(root->p3);
                 delete root;
             }
         }
-        Node* addRecursive(Node* root, Key key, Item val) {
-            if (root == nullptr) return root;
-            if (root->left == nullptr) { // é folha
-                if (root->eh2no) { // só adiciona
-                    root->val2 = val;
-                    root->key2 = key;
+        Node* addRecursive(Node* root, Key key, Item val, boolean *cresceu) {
+            if (root == nullptr) { // árvode vazia -> inicializa a árvore
+                root = new Node(key, val);
+                cresceu = true;
+                return root;
+            }
+            if (root->p1 == nullptr) { // é folha
+                if (root->eh2no) { // só adiciona na própria folha
+                    if (key > root->key1) {
+                        root->key2 = key;
+                        root->val2 = val;
+                        root->eh2no = false;
+                    } else if (key < root->key1) {
+                        root->key2 = root->key1;
+                        root->val2 = root->val1;
+                        root->key1 = key;
+                        root->val1 = val;
+                        root->eh2no = false;
+                    } else { // key == key1 -> atualiza valor
+                        root->val1 = val;
+                    }
                     return root;
+                } else { // é 3 no
+                    if (key < root->key1) { // root (recebe key) < newRoot (recebe key1) < newRight (recebe key2)
+                        Node* newRoot = new Node(root->key1, root->val1);
+                        Node* newRight = new Node(root->key2, root->val2);
+                        newRoot->p1 = root;
+                        newRoot->p2 = newRight;
+                        root->key1 = key;
+                        root->val1 = val;
+                    } else if (key < root->key2) { // root (mantém key1) < newRoot (recebe key) < newRight (recebe key2)
+                        Node* newRoot = new Node(key, val);
+                        Node* newRight = new Node(root->key2, root->val2);
+                        newRoot->p1 = root;
+                        newRoot->p2 = newRight;
+                    } else { // key > root->key2    root (mantém key1) < newRoot (recebe key2) < newRight (recebe key)
+                        Node* newRoot = new Node(root->key2, root->val2);
+                        Node* newRight = new Node(key, val);
+                    }
+                    root->key2 = nullptr;
+                    root->val2 = nullptr;
+                    cresceu = true;
+                    return newRoot; 
                 }
-                // é 3 no
-                if (key > root->key2)
-                Node* newLeft = Node(root->key1, root->val1);
-                Node* newRight = Node(root->key2, root->val2);
-            } 
+            } else { // não é folha
+                if (root->key1 > key) {
+                    Node* p = addRecursive(root->p1, key, val, cresceu);
+                    if (cresceu) {
+                        if (root->eh2no) { // consigo só inserir
+                            root->key2 = root->key1;
+                            root->val2 = root->val1;
+                            root->p3 = root->p2;
+                            root->key1 = p->key1;
+                            root->val1 = p->val1;
+                            root->p2 = p->p2;
+                            root->eh2no = false;
+                            cresceu = false;
+                            return root;
+                        } else {
+                            Node* newRight = new Node(root->key2, root->val2);
+                            newRight->p2 = root->p3;
+                            newRight->p1 = root->p2;
+                            Node* newRoot = new Node(root->key1, root->key2);
+                            newRoot->p1 = root;
+                            newRoot->p2 = newRight;
+                            root->key1 = p->key1;
+                            root->val1 = p->val1;
+                            root->key2 = nullptr;
+                            root->val2 = nullptr;
+                            root->p3 = nullptr;
+                            root->eh2no = true;
+                            root->p2 = p->p2; 
+                            delete(p);
+                            cresceu = true;
+                            return newRoot;
+                        }
+                    } else { // não cresceu
+                        root->p1 = p; // precisa?
+                        cresceu = false; // precisa?
+                        return raiz;
+                    }
+                } else if (root->eh2no || root->key2 > key) {
+                    Node* p = addRecursive(root->p2, key, val, cresceu);
+                    if (cresceu) {
+                        if (root->eh2no) {
+                            root->key2 = p->key1;
+                            root->val2 = p->val1;
+                            root->p3 = p->p2;
+                            //root->p2 = p->p1 (acho que fica igual então estou comentando)
+                            // p1/esquerda permanece inalterada
+                            root->eh2no = false;
+                            cresceu = false;
+                            return root;
+                        } else {
+                            Node* newRight = new Node(root->key2, root->val2);
+                            newRight->p2 = root->p3;
+                            newRight->p1 = p->p2;
+                            Node* newRoot = new Node(p->key1, p->val1); // já está vindo pelo meio, então vai subir mais
+                            newRoot->p1 = root;
+                            newRoot->p2 = newRight;
+                            root->p3 = nullptr;
+                            root->eh2no = true;
+                            delete(p);
+                            cresceu = true;
+                            return newRoot;
+                        }
+                    } else { // não cresceu
+                        // falta algo?
+                        return root;
+                    }
+                } else { // é 3-nó e está vindo pela direita
+                    Node* p = addRecursive(root->p3, key, val, cresceu);
+                    
++
+                }
+            }
         }
 
         Item searchRecursive(Node* root, Key key) {
