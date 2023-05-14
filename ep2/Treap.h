@@ -16,7 +16,7 @@ class Treap {
                 this->key = key;
                 this->val = val;
                 this->priority = rand();  // assign a random priority
-                std::cout << val << " " << priority << "\n";
+                //debugging std::cout << val << " " << priority << "\n";
                 left = nullptr;
                 right = nullptr;
             }
@@ -54,13 +54,13 @@ class Treap {
             }
             if (key < root->key) {
                 root->left = addRecursive(root->left, key, val);
-                if (root->left->priority < root->priority)
+                if (root->left->priority > root->priority)
                     root = rotateRight(root);
                 return root;
             }
             if (key > root->key) {
                 root->right = addRecursive(root->right, key, val);
-                if (root->right->priority < root->priority)
+                if (root->right->priority > root->priority)
                     root = rotateLeft(root);
                 return root;
             }

@@ -1,10 +1,9 @@
 #include <iostream>
 #include <string>
-#include "Treap.h"
+#include "23Tree.h"
 
 int main() {
-    Treap<int, std::string> arvore;
-    srand(1224);
+    A23<int, std::string> arvore;
     
     arvore.add(1, "1");
     arvore.add(4, "4");

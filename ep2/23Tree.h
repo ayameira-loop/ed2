@@ -53,24 +53,32 @@ class A23 {
                     }
                     return root;
                 } else { // é 3 no
+                    Node* newRoot = new Node();
+                    Node* newRight = new Node();
                     if (key < root->key1) { // root (recebe key) < newRoot (recebe key1) < newRight (recebe key2)
-                        Node* newRoot = new Node(root->key1, root->val1);
-                        Node* newRight = new Node(root->key2, root->val2);
+                        newRoot->key1 = root->key1;
+                        newRoot->val1 = root->val1;
+                        newRight->key1 = root->key2;
+                        newRight->val1 = root->val2;
                         newRoot->p1 = root;
                         newRoot->p2 = newRight;
                         root->key1 = key;
                         root->val1 = val;
                     } else if (key < root->key2) { // root (mantém key1) < newRoot (recebe key) < newRight (recebe key2)
-                        Node* newRoot = new Node(key, val);
-                        Node* newRight = new Node(root->key2, root->val2);
+                        newRoot->key1 = key;
+                        newRoot->val1 = val;
+                        newRight->key1 = root->key2;
+                        newRight->val2 = root->val2;
                         newRoot->p1 = root;
                         newRoot->p2 = newRight;
                     } else { // key > root->key2    root (mantém key1) < newRoot (recebe key2) < newRight (recebe key)
-                        Node* newRoot = new Node(root->key2, root->val2);
-                        Node* newRight = new Node(key, val);
+                        newRoot->key1 = root->key2;
+                        newRoot->val2 = root->val2;
+                        newRight->key1 = key;
+                        newRight->val1 = val;
                     }
-                    root->key2 = nullptr;
-                    root->val2 = nullptr;
+                    root->key2 = NULL;
+                    root->val2 = NULL;
                     cresceu = true;
                     return newRoot; 
                 }
@@ -92,13 +100,13 @@ class A23 {
                             Node* newRight = new Node(root->key2, root->val2);
                             newRight->p2 = root->p3;
                             newRight->p1 = root->p2;
-                            Node* newRoot = new Node(root->key1, root->key2);
+                            Node* newRoot = new Node(root->key1, root->val1);
                             newRoot->p1 = root;
                             newRoot->p2 = newRight;
                             root->key1 = p->key1;
                             root->val1 = p->val1;
-                            root->key2 = nullptr;
-                            root->val2 = nullptr;
+                            root->key2 = NULL;
+                            root->val2 = NULL;
                             root->p3 = nullptr;
                             root->eh2no = true;
                             root->p2 = p->p2; 
@@ -142,14 +150,43 @@ class A23 {
                     }
                 } else { // é 3-nó e está vindo pela direita
                     Node* p = addRecursive(root->p3, key, val, cresceu);
-                    
-+
+                    if (cresceu) {
+                        // p vai entrar no lugar de newRight
+                        // esquerda fica na esquerda
+                        // antiga direita vai subir
+                        Node* newRoot = new Node(root->key2, root->val2);
+                        newRoot->p2 = p;
+                        newRoot->p1 = root;
+                        root->p3 = NULL;
+                        root->eh2no = true;
+                        return newRoot;
+                    } else {
+                        return root;
+                    }
                 }
             }
         }
 
         Item searchRecursive(Node* root, Key key) {
-
+            if (key == root->key1)
+                return root->val1;
+            if (key == root->key2)
+                return root->val2;
+            if (root->eh2no) {
+                if (key < root->key1) { // procura pela esquerda
+                    return searchRecursive(root->p1, key);
+                } else { // procura pela direita
+                    return searchRecursive(root->p2, key);
+                }
+            } else {
+                if (key < root->key1) { // procura pela esquerda
+                    return searchRecursive(root->p1, key);
+                } else if (key > root->key2) { // procura pela direita
+                    return searchRecursive(root->p3, key);
+                } else { // procura pelo meio
+                    return searchRecursive(root->p2, key);
+                }
+            }
         }
         
     public:

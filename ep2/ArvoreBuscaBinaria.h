@@ -77,8 +77,7 @@ class ArvoreBuscaBinaria {
             if (key < root->key) {
                 return searchRecursive(root->left, key);
             }
-            else
-            {
+            else {
                 return searchRecursive(root->right, key);
             }
         }

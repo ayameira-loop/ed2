@@ -16,7 +16,7 @@ int main() {
     std::string palavra = "lalola";
     Palavra *p = new Palavra(palavra);
     p->addOcorrencia();
-    std::cout << palavra << " " << p->getOcorrencias() << " " << p->getNumLetras() << " " << p->getNumVogaisSemRepeticao() << std::endl;
+    std::cout << palavra << " Ocorrências: " << p->getOcorrencias() << " # de letras: " << p->getNumLetras() << " # de Vogais sem repetiçõa: " << p->getNumVogaisSemRepeticao() << std::endl;
 
 
     return 0;
