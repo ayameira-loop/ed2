@@ -23,8 +23,15 @@ int main() {
     arvore.add(29, "29");
     std::cout << "adiciona 33" << std::endl;
     arvore.add(33, "33");
-    //std::cout << arvore.value(3);
+       /*
+    arvore.add(12, "12");
+    arvore.add(15, "15");
+    arvore.add(13, "13");
+    arvore.add(8, "8");
+    arvore.add(10, "10");
+    */
 
     arvore.print();
+    std::cout << arvore.value(11);
     return 0;
 }
