@@ -30,31 +30,17 @@ void removeDuplicates(std::string* arr, int size) {
     }
 }
 
-
-int main() {
-    int N; 
-    int i, count = 0;
-    cout << "N: ";
-    cin >> N;
-    std::string words[N];
+template<typename E>
+void doStuff(E estrutura, std::string words[], int N) {
     std::string cleanWords[N];
-    cout << N << endl;
-    for (int i = 0; i < N; i++) {
-        cin >> words[i];
-    }
-    VetorDinamicoOrdenado<std::string, Palavra> vdo;
-    Treap<std::string, Palavra> treap;
-    ArvoreBuscaBinaria<std::string, Palavra> abb;
-    RBTree<std::string, Palavra> rb;
 
     for (size_t i = 0; i < N; i++) {
         std::string cleanWord = removeCharacters(words[i]);
         cleanWords[i] = cleanWord;
         Palavra p = Palavra(cleanWord);
-        rb.add(cleanWord, p);
+        estrutura.add(cleanWord, p);
     }
-
-    rb.print();
+    estrutura.print();
 
     // F: palavras mais frequentes
     int highestF = 1;
@@ -63,7 +49,7 @@ int main() {
 
     for (int i = 0; i < N; i++) {
         std::string word = cleanWords[i];
-        Palavra p = rb.value(word);
+        Palavra p = estrutura.value(word);
         if (p.getOcorrencias() > highestF) {
             highestF = p.getOcorrencias();
             highest[0] = word;
@@ -91,7 +77,7 @@ int main() {
 
     for (int i = 0; i < N; i++) {
         std::string word = cleanWords[i];
-        Palavra p = rb.value(word);
+        Palavra p = estrutura.value(word);
         if (p.getNumLetras() > length) {
             length = p.getNumLetras();
             longest_words[0] = word;
@@ -117,7 +103,7 @@ int main() {
 
     for (int i = 0; i < N; i++) {
         std::string word = cleanWords[i];
-        Palavra p = rb.value(word);
+        Palavra p = estrutura.value(word);
         if (p.getTemRepetida()) continue;
         if (p.getNumLetras() > lengthSR) {
             lengthSR = p.getNumLetras();
@@ -144,7 +130,7 @@ int main() {
 
     for (int i = 0; i < N; i++) {
         std::string word = cleanWords[i];
-        Palavra p = rb.value(word);
+        Palavra p = estrutura.value(word);
         if (p.getNumVogaisSemRepeticao() > mostVowels) {
             mostVowels = p.getNumVogaisSemRepeticao();
             wordsWithMostVowels[0] = word;
@@ -173,6 +159,43 @@ int main() {
         }
     }
     std::cout << std::endl;
+}
+
+int main() {
+    int i, count = 0;
+    std::string E;
+    std::cin >> E;
+
+    int N; 
+    std::cin >> N;
+    std::string words[N];
+
+    for (int i = 0; i < N; i++) {
+        cin >> words[i];
+    }
+
+    if (E == "VO") {
+        std::cout << "eh vo" << std::endl;
+        VetorDinamicoOrdenado<std::string, Palavra> estrutura;
+        doStuff(estrutura, words, N);
+    } else if (E == "ABB") {
+        ArvoreBuscaBinaria<std::string, Palavra> estrutura;
+        doStuff(estrutura, words, N);
+    } else if (E == "TR") {
+        Treap<std::string, Palavra> estrutura;
+        doStuff(estrutura, words, N);
+    } else if (E == "ARN") {
+        RBTree<std::string, Palavra> estrutura;
+        doStuff(estrutura, words, N);
+    } else {
+        std::cout << "Invalid data structure." << std::endl;
+        return -1;
+    }
+    
+
+
+
+
     
     return 0;
 }
