@@ -199,7 +199,7 @@ class RBTree {
             return root;
         }
 
-        Item searchRecursive(Node* root, Key key) {
+        Item searchRecursive(Node* root, Key key) const {
             if (root == nullptr)
                 throw std::runtime_error("Key not found in tree.");
             if (key == root->key)
@@ -218,7 +218,7 @@ class RBTree {
         ~RBTree();
         void add(Key key, Item val);
         void print();
-        Item value(Key key);
+        Item value(Key key) const;
 };
 
 
@@ -235,7 +235,7 @@ RBTree<Key, Item>::~RBTree() {
 }
 
 template<class Key, class Item>
-Item RBTree<Key, Item>::value(Key key) {
+Item RBTree<Key, Item>::value(Key key) const {
     return searchRecursive(root, key);
 }
 

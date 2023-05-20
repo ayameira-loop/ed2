@@ -55,7 +55,7 @@ class ArvoreBuscaBinaria {
             }
         }
         
-        Item searchRecursive(Node* root, Key key) {
+        Item searchRecursive(Node* root, Key key) const {
             if (root == nullptr)
                 throw std::runtime_error("Key not found in tree.");
             if (key == root->key)
@@ -73,11 +73,11 @@ class ArvoreBuscaBinaria {
         ~ArvoreBuscaBinaria();
         void add(Key key, Item val);
         void print();
-        Item value(Key key);
+        Item value(Key key) const;
 };
 
 template<class Key, class Item>
-Item ArvoreBuscaBinaria<Key, Item>::value(Key key) {
+Item ArvoreBuscaBinaria<Key, Item>::value(Key key) const {
     return searchRecursive(root, key);
 }
 

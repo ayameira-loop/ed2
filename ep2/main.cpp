@@ -30,40 +30,16 @@ void removeDuplicates(std::string* arr, int size) {
     }
 }
 
-
-int main() {
-    int N; 
-    int i, count = 0;
-    cout << "N: ";
-    cin >> N;
-    std::string words[N];
-    std::string cleanWords[N];
-    cout << N << endl;
-    for (int i = 0; i < N; i++) {
-        cin >> words[i];
-    }
-    VetorDinamicoOrdenado<std::string, Palavra> vdo;
-    Treap<std::string, Palavra> treap;
-    ArvoreBuscaBinaria<std::string, Palavra> abb;
-    RBTree<std::string, Palavra> rb;
-
-    for (size_t i = 0; i < N; i++) {
-        std::string cleanWord = removeCharacters(words[i]);
-        cleanWords[i] = cleanWord;
-        Palavra p = Palavra(cleanWord);
-        rb.add(cleanWord, p);
-    }
-
-    rb.print();
-
+template<typename E>
+void printMostFrequent(const E& estrutura, std::string words[], int N) {
     // F: palavras mais frequentes
     int highestF = 1;
     int tamHighest = 0; // numero de palavras q ocorreram highestF vezes
     std::string highest[N];
 
     for (int i = 0; i < N; i++) {
-        std::string word = cleanWords[i];
-        Palavra p = rb.value(word);
+        std::string word = words[i];
+        Palavra p = estrutura.value(word);
         if (p.getOcorrencias() > highestF) {
             highestF = p.getOcorrencias();
             highest[0] = word;
@@ -81,17 +57,18 @@ int main() {
         }
     }
     std::cout << std::endl;
+}
 
-    // O: dada uma palavra, quantas vezes ocorre no texto
-
+template<typename E>
+void printLongest(E estrutura, std::string words[], int N) {
     // L: quais as palavras mais longas
     int length = 1;
     int tamLongest = 0; // numero de palavras q tem length tamanho
     std::string longest_words[N];
 
     for (int i = 0; i < N; i++) {
-        std::string word = cleanWords[i];
-        Palavra p = rb.value(word);
+        std::string word = words[i];
+        Palavra p = estrutura.value(word);
         if (p.getNumLetras() > length) {
             length = p.getNumLetras();
             longest_words[0] = word;
@@ -109,6 +86,40 @@ int main() {
         }
     }
     std::cout << std::endl;
+}
+
+int main() {
+    int N; 
+    int i, count = 0;
+    std::cout << "N: ";
+    std::cin >> N;
+    std::string words[N];
+    std::string cleanWords[N];
+    std::cout << N << endl;
+    for (int i = 0; i < N; i++) {
+        cin >> words[i];
+    }
+    VetorDinamicoOrdenado<std::string, Palavra> vdo;
+    Treap<std::string, Palavra> treap;
+    ArvoreBuscaBinaria<std::string, Palavra> abb;
+    RBTree<std::string, Palavra> rb;
+
+    for (size_t i = 0; i < N; i++) {
+        cleanWords[i] = removeCharacters(words[i]);
+        vdo.add(cleanWords[i], Palavra(cleanWords[i]));
+    }
+
+    vdo.print();
+    printMostFrequent(vdo, cleanWords, N);
+    printLongest(vdo, cleanWords, N);
+    vdo.print();
+    printLongest(vdo, cleanWords, N);
+
+
+    /*
+    // O: dada uma palavra, quantas vezes ocorre no texto
+
+
 
     // SR: quais as maiores palavras que nao repetem letras
     int lengthSR = 1;
@@ -173,7 +184,8 @@ int main() {
         }
     }
     std::cout << std::endl;
-    
+    */
+
     return 0;
 }
 

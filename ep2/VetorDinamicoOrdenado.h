@@ -9,7 +9,7 @@ private:
     int cap;
     Key* keys;
     Item* values;
-    int binarySearch(std::string a[], std::string item, int low, int high, bool& achou) {
+    int binarySearch(std::string a[], std::string item, int low, int high, bool& achou) const {
         while (low <= high) {
             int mid = low + (high - low) / 2;
             if (item == a[mid]) {
@@ -29,7 +29,7 @@ public:
     ~VetorDinamicoOrdenado();
     int size();
     void add(Key key, Item val);
-    Item value(Key key);
+    Item value(Key key) const;
     void mostFrequent();
     int getFrequency(std::string palavra);
     void longest();
@@ -100,7 +100,7 @@ void VetorDinamicoOrdenado<Key, Item>::add(Key key, Item val) {
 }
 
 template<class Key, class Item>
-Item VetorDinamicoOrdenado<Key, Item>::value(Key key) {
+Item VetorDinamicoOrdenado<Key, Item>::value(Key key) const {
     bool achou = false;
     int result = binarySearch(keys, key, 0, tam-1, achou);
     if (achou == false) {

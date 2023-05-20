@@ -89,7 +89,7 @@ class Treap {
             printRecursive(root->left, space);
         }
         
-        Item searchRecursive(Node* root, Key key) {
+        Item searchRecursive(Node* root, Key key) const {
             if (root == nullptr)
                 throw std::runtime_error("Key not found in tree.");
             if (key == root->key)
@@ -107,7 +107,7 @@ class Treap {
         ~Treap();
         void add(Key key, Item val);
         void print();
-        Item value(Key key);
+        Item value(Key key) const;
 };
 
 
@@ -124,7 +124,7 @@ Treap<Key, Item>::~Treap() {
 }
 
 template<class Key, class Item>
-Item Treap<Key, Item>::value(Key key) {
+Item Treap<Key, Item>::value(Key key) const {
     return searchRecursive(root, key);
 }
 
