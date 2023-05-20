@@ -11,7 +11,7 @@ int main() {
     arvore.add(0, "0");
     arvore.add(5, "5");
     arvore.add(3, "3");
-    std::cout << arvore.value(3);
+    //std::cout << arvore.value(3);
 
     arvore.print();
     return 0;

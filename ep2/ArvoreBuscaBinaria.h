@@ -25,48 +25,34 @@ class ArvoreBuscaBinaria {
             }
         }
         Node* addRecursive(Node* root, Key key, Item val) {
-            if (root == nullptr)
-            {
+            if (root == nullptr) {
                 Node *p = new Node(key, val);
                 return p;
             }
-            if (key < root->key)
-            {
+            if (key < root->key) {
                 root->left = addRecursive(root->left, key, val);
                 return root;
             }
-            if (key > root->key)
-            {
+            if (key > root->key) {
                 root->right = addRecursive(root->right, key, val);
                 return root;
             }
-            if (key == root->key)
-            {
-                root->val = val;
+            if (key == root->key) {
+                root->val.addOcorrencia();
                 return root;
             }
         }
 
 
-        void printRecursive(Node* root, int space) {
-            // Base case
-            if (root == NULL)
-                return;
-        
-            // Increase distance between levels
-            space += 5;
-        
-            // Process right child first
-            printRecursive(root->right, space);
-        
-            // Print current node after space
-            std::cout << std::endl;
-            for (int i = 5; i < space; i++)
-                std::cout << " ";
-            std::cout << root->val << "\n";
-        
-            // Process left child
-            printRecursive(root->left, space);
+        void printRecursive(Node* node, int level) {
+            if (node != nullptr) {
+                printRecursive(node->right, level + 1);
+                for (int i = 0; i < level; i++) {
+                    std::cout << "   ";
+                }
+                std::cout << node->val.toString() << std::endl;
+                printRecursive(node->left, level + 1);
+            }
         }
         
         Item searchRecursive(Node* root, Key key) {

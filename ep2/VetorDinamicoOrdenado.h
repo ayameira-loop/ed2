@@ -33,11 +33,11 @@ public:
     void mostFrequent();
     int getFrequency(std::string palavra);
     void longest();
-    void show();
+    void print();
 };
 
 template<class Key, class Item>
-void VetorDinamicoOrdenado<Key, Item>::show() {
+void VetorDinamicoOrdenado<Key, Item>::print() {
     for (size_t i = 0; i < tam; i++)
     {
         std::cout << i << " - " << " { " << keys[i] << ", " << values[i].toString() << " }" << std::endl;

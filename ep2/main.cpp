@@ -3,7 +3,9 @@
 #include <algorithm>
 #include "VetorDinamicoOrdenado.h"
 #include "Palavra.h"
-
+#include "Treap.h"
+#include "ArvoreBuscaBinaria.h"
+#include "RBTree.h"
 // cat .\moreWords | ./main
 
 using namespace std;
@@ -42,15 +44,18 @@ int main() {
         cin >> words[i];
     }
     VetorDinamicoOrdenado<std::string, Palavra> vdo;
+    Treap<std::string, Palavra> treap;
+    ArvoreBuscaBinaria<std::string, Palavra> abb;
+    RBTree<std::string, Palavra> rb;
 
     for (size_t i = 0; i < N; i++) {
         std::string cleanWord = removeCharacters(words[i]);
         cleanWords[i] = cleanWord;
         Palavra p = Palavra(cleanWord);
-        vdo.add(cleanWord, p);
+        rb.add(cleanWord, p);
     }
 
-    vdo.show();
+    rb.print();
 
     // F: palavras mais frequentes
     int highestF = 1;
@@ -59,7 +64,7 @@ int main() {
 
     for (int i = 0; i < N; i++) {
         std::string word = cleanWords[i];
-        Palavra p = vdo.value(word);
+        Palavra p = rb.value(word);
         if (p.getOcorrencias() > highestF) {
             highestF = p.getOcorrencias();
             highest[0] = word;
@@ -73,7 +78,7 @@ int main() {
     std::cout << "Palavra(s) mais frequente(s) (frequencia = " << highestF << "): " << std::endl;
     for (int i = 0; i < tamHighest; i++) {
         if (highest[i] != "") {
-            std::cout << highest[i] << std::endl;
+            std::cout << highest[i] << " ";
         }
     }
 
@@ -86,7 +91,7 @@ int main() {
 
     for (int i = 0; i < N; i++) {
         std::string word = cleanWords[i];
-        Palavra p = vdo.value(word);
+        Palavra p = rb.value(word);
         if (p.getNumLetras() > length) {
             length = p.getNumLetras();
             longest_words[0] = word;
@@ -100,7 +105,7 @@ int main() {
     std::cout << "Palavra(s) mais longa(s) (# letras = " << length << "): " << std::endl;
     for (int i = 0; i < tamLongest; i++) {
         if (longest_words[i] != "") {
-            std::cout << longest_words[i] << std::endl;
+            std::cout << longest_words[i] << " ";
         }
     }
 
@@ -111,7 +116,7 @@ int main() {
 
     for (int i = 0; i < N; i++) {
         std::string word = cleanWords[i];
-        Palavra p = vdo.value(word);
+        Palavra p = rb.value(word);
         if (p.getTemRepetida()) continue;
         if (p.getNumLetras() > lengthSR) {
             lengthSR = p.getNumLetras();
@@ -126,7 +131,7 @@ int main() {
     std::cout << "Palavra(s) mais longa(s) sem letras repetidas (# letras = " << lengthSR << "): " << std::endl;
     for (int i = 0; i < tamLongestSR; i++) {
         if (longest_words_SR[i] != "") {
-            std::cout << longest_words_SR[i] << std::endl;
+            std::cout << longest_words_SR[i] << " ";
         }
     }
 
@@ -137,7 +142,7 @@ int main() {
 
     for (int i = 0; i < N; i++) {
         std::string word = cleanWords[i];
-        Palavra p = vdo.value(word);
+        Palavra p = rb.value(word);
         if (p.getNumVogaisSemRepeticao() > mostVowels) {
             mostVowels = p.getNumVogaisSemRepeticao();
             wordsWithMostVowels[0] = word;
@@ -148,22 +153,21 @@ int main() {
         }
     }
     removeDuplicates(highest, tamMost);
-    std::cout << "Palavra(s) com mais vogais sem repetição (# vogais = " << mostVowels << "): " << std::endl;
-
     int shortestLengthVD = 5000;
     // encontra menor palavra em wordsWithMostVowels
     for (int i = 0; i < tamMost; i++) {
         if (wordsWithMostVowels[i] != "") {
             int len = wordsWithMostVowels[i].length();
             if (len < shortestLengthVD) {
-                shortestLengthVD = length;
+                shortestLengthVD = len;
             }
         }
     }
+    std::cout << "Palavra(s) com mais vogais sem repeticao (# vogais = " << mostVowels << ") e menor tamanho (# letras = " << shortestLengthVD << "): " << std::endl;
     // printa todas as palavras com esse tamanho
     for (int i = 0; i < tamMost; i++) {
         if (wordsWithMostVowels[i].length() == shortestLengthVD) {
-            std::cout << wordsWithMostVowels[i] << std::endl;
+            std::cout << wordsWithMostVowels[i] << " ";
         }
     }
     

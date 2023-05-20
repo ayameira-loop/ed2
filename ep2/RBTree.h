@@ -59,7 +59,7 @@ class RBTree {
                 for (int i = 0; i < level; i++) {
                     std::cout << "   ";
                 }
-                std::cout << node->key << (node->isBlack ? "(B)" : "(R)") << std::endl;
+                std::cout << node->val.toString() << (node->isBlack ? "(B)" : "(R)") << std::endl;
                 printRecursive(node->left, level + 1);
             }
         }
@@ -91,7 +91,7 @@ class RBTree {
                     gotcha = true;
             }
             if (p->key == key) {
-                p->val = val;
+                p->val.addOcorrencia();
                 return root;
             }
             Node* novo = new Node(key, val);
@@ -99,26 +99,21 @@ class RBTree {
             novo->pai = pai;
 
             if (key > pai->key) {
-                std::cout << "pai menor: " << pai->key << std::endl;
                 pai->right = novo;
             }
             else {
-                std::cout << "pai maior: " << pai->key << std::endl;
                 pai->left = novo;
             }
 
             while (1) {
                 if (pai->isBlack) {
-                    std::cout << "pai preto" << std::endl;
                     break;
                 }
                 if (pai->pai == nullptr) { // pai vermelho e não tem avÕ
-                    std::cout << "nao tem avo" << std::endl;
                     pai->isBlack = true;
                     break;
                 }
                 Node* avo = pai->pai;
-                std::cout << "avo: " << avo->key << std::endl;
                 Node* tio = new Node();
 
                 if (avo->left == pai) {
@@ -128,7 +123,6 @@ class RBTree {
                 }
 
                 if (tio != nullptr && !(tio->isBlack)) {
-                    std::cout << "tio vermelho: " << tio->val << std::endl;
                     tio->isBlack = !tio->isBlack;
                     avo->isBlack = !avo->isBlack;
                     pai->isBlack = !pai->isBlack;
@@ -137,18 +131,12 @@ class RBTree {
                         break;
                     pai = p->pai;
                     novo = p;
-                    std::cout << "novo pai: " << pai->key << std::endl;
                 } else { // tio não existe ou é preto
-                    std::cout << "tio nao existe ou eh preto" << std::endl;
-                    std::cout << "novo = " << novo->key << std::endl;
-                    std::cout << "pai = " << pai->key << std::endl;
                     // p entra pela esquerda e o pai é filho esquerdo
                     if (pai->left == novo && avo->left == pai) {
-                        std::cout << "p entra pela esquerda e o pai é filho esquerdo" << std::endl;
                         Node* q = rotateRight(avo);
                         q->isBlack = true; // pinta o pai
                         q->right->isBlack = false; // pinta o ex-avo
-                        std::cout << "q = nova raiz = " << q->key << std::endl;
                         if (q->pai != nullptr && q->pai->key > q->key) {
                             q->pai->left = q;
                             break;
@@ -161,11 +149,9 @@ class RBTree {
                     }
                     // p entra pela direita e o pai é filho direito
                     if (pai->right == novo && avo->right == pai) {
-                        std::cout << "novo entra pela direita e o pai eh filho direito" << std::endl;
                         Node* q = rotateLeft(avo);
                         q->isBlack = true; // pinta o pai
                         q->left->isBlack = false; // pinta o ex-avo
-                        std::cout << "q = nova raiz = " << q->key << std::endl;
                         if (q->pai != nullptr && q->pai->key > q->key) {
                             q->pai->left = q;
                             break;
@@ -178,12 +164,10 @@ class RBTree {
                     }
                     // p entra pela direita e o pai é filho esquerdo
                     if (pai->right == novo && avo->left == pai) {
-                        std::cout << "novo entra pela direita e o pai eh filho esquerdo" << std::endl;
                         avo->left = rotateLeft(pai);
                         Node* q = rotateRight(avo);
                         q->isBlack = true; // pinta o pai
                         q->right->isBlack = false; // pinta o ex-avo
-                        std::cout << "q = nova raiz = " << q->key << std::endl;
                         if (q->pai != nullptr && q->pai->key > q->key) {
                             q->pai->left = q;
                             break;
@@ -196,12 +180,10 @@ class RBTree {
                     }
                     // p entra pela esquerda e o pai é filho direito
                     if (pai->left == novo && avo->right == pai) {
-                        std::cout << "novo entra pela esquerda e o pai é filho direito" << std::endl;
                         avo->right = rotateRight(pai);
                         Node* q = rotateLeft(avo);
                         q->isBlack = true;
                         q->left->isBlack = false;
-                        std::cout << "q = nova raiz = " << q->key << std::endl;
                         if (q->pai != nullptr && q->pai->key > q->key) {
                             q->pai->left = q;
                             break;

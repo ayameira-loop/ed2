@@ -16,7 +16,6 @@ class Treap {
                 this->key = key;
                 this->val = val;
                 this->priority = rand();  // assign a random priority
-                //debugging std::cout << val << " " << priority << "\n";
                 left = nullptr;
                 right = nullptr;
             }
@@ -65,7 +64,7 @@ class Treap {
                 return root;
             }
             if (key == root->key) {
-                root->val = val;
+                root->val.addOcorrencia();
                 return root;
             }
         }
@@ -84,7 +83,7 @@ class Treap {
             std::cout << std::endl;
             for (int i = 5; i < space; i++)
                 std::cout << " ";
-            std::cout << root->val << "\n";
+            std::cout << root->val.toString() << "\n";
         
             // Process left child
             printRecursive(root->left, space);
@@ -133,8 +132,6 @@ template<class Key, class Item>
 void Treap<Key, Item>::add(Key key, Item val) {
     root = addRecursive(root, key, val);
 }
-
-
 
 template<class Key, class Item>
 void Treap<Key, Item>::print() {
