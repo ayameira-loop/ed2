@@ -12,6 +12,12 @@ class A23 {
             Node* p3;
             bool eh2no;
             bool cresceu;
+            Node() {
+                p1 = nullptr;
+                p2 = nullptr;
+                p3 = nullptr;
+                eh2no = true;
+            }
             Node(Key key, Item val) {
                 this->key1 = key;
                 this->val1 = val;
@@ -30,7 +36,7 @@ class A23 {
                 delete root;
             }
         }
-        Node* addRecursive(Node* root, Key key, Item val, boolean *cresceu) {
+        Node* put23(Node* root, Key key, Item val, bool &cresceu) {
             if (root == nullptr) { // árvode vazia -> inicializa a árvore
                 root = new Node(key, val);
                 cresceu = true;
@@ -77,14 +83,15 @@ class A23 {
                         newRight->key1 = key;
                         newRight->val1 = val;
                     }
-                    root->key2 = NULL;
-                    root->val2 = NULL;
+                    root->eh2no = false;
+                    //nullptr root->key2 = nullptr;
+                    //nullptr root->val2 = nullptr;
                     cresceu = true;
                     return newRoot; 
                 }
             } else { // não é folha
                 if (root->key1 > key) {
-                    Node* p = addRecursive(root->p1, key, val, cresceu);
+                    Node* p = put23(root->p1, key, val, cresceu);
                     if (cresceu) {
                         if (root->eh2no) { // consigo só inserir
                             root->key2 = root->key1;
@@ -105,8 +112,8 @@ class A23 {
                             newRoot->p2 = newRight;
                             root->key1 = p->key1;
                             root->val1 = p->val1;
-                            root->key2 = NULL;
-                            root->val2 = NULL;
+                            //nullptr root->key2 = nullptr;
+                            //nullptr root->val2 = nullptr;
                             root->p3 = nullptr;
                             root->eh2no = true;
                             root->p2 = p->p2; 
@@ -117,10 +124,10 @@ class A23 {
                     } else { // não cresceu
                         root->p1 = p; // precisa?
                         cresceu = false; // precisa?
-                        return raiz;
+                        return root;
                     }
                 } else if (root->eh2no || root->key2 > key) {
-                    Node* p = addRecursive(root->p2, key, val, cresceu);
+                    Node* p = put23(root->p2, key, val, cresceu);
                     if (cresceu) {
                         if (root->eh2no) {
                             root->key2 = p->key1;
@@ -149,7 +156,7 @@ class A23 {
                         return root;
                     }
                 } else { // é 3-nó e está vindo pela direita
-                    Node* p = addRecursive(root->p3, key, val, cresceu);
+                    Node* p = put23(root->p3, key, val, cresceu);
                     if (cresceu) {
                         // p vai entrar no lugar de newRight
                         // esquerda fica na esquerda
@@ -157,7 +164,7 @@ class A23 {
                         Node* newRoot = new Node(root->key2, root->val2);
                         newRoot->p2 = p;
                         newRoot->p1 = root;
-                        root->p3 = NULL;
+                        root->p3 = nullptr;
                         root->eh2no = true;
                         return newRoot;
                     } else {
@@ -188,7 +195,38 @@ class A23 {
                 }
             }
         }
-        
+
+        void printRecursive(Node* node, int level) {
+            int space = 3;
+            if (node != nullptr) {
+                if (node->eh2no) {
+                    printRecursive(node->p3, level + space);
+                    /*for (int i = 0; i < level; i++) {
+                        std::cout << "   ";
+                    }*/
+                    std::cout << "K2:" << node->key2 << std::endl;
+                    printRecursive(node->p2, level + space);
+                    std::cout << "K1:" << node->key1 << std::endl;
+                    printRecursive(node->p1, level + space);
+                    /*for (int i = 0; i < level; i++) {
+                        std::cout << "   ";
+                    }*/
+                } else {
+                    printRecursive(node->p2, level + space);
+                    /*for (int i = 0; i < level; i++) {
+                        std::cout << "   ";
+                    }*/
+                    std::cout << "K1:" << node->key1 << std::endl;
+                    printRecursive(node->p1, level + space);
+                }
+                /*
+                for (int i = 0; i < level; i++) {
+                    std::cout << "   ";
+                }
+                */
+            }
+        }
+
     public:
         A23();
         ~A23();
@@ -217,10 +255,11 @@ Item A23<Key, Item>::value(Key key) {
 
 template<class Key, class Item>
 void A23<Key, Item>::add(Key key, Item val) {
-    root = addRecursive(root, key, val);
+    bool cresceu = false;
+    root = put23(root, key, val, cresceu);
 }
 
-//template<class Key, class Item>
-//void A23<Key, Item>::print() {
-//    printRecursive(root, 0);
-//}
+template<class Key, class Item>
+void A23<Key, Item>::print() {
+    printRecursive(root, 0);
+}
