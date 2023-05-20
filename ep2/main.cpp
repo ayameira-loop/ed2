@@ -35,7 +35,7 @@ template<typename E>
 void doStuff(E estrutura, std::string words[], int N, std::vector<std::string> commands) {
     // populate structure
     std::string cleanWords[N];
-    for (size_t i = 0; i < N; i++) {
+    for (int i = 0; i < N; i++) {
         std::string cleanWord = removeCharacters(words[i]);
         cleanWords[i] = cleanWord;
         Palavra p = Palavra(cleanWord);
@@ -44,6 +44,7 @@ void doStuff(E estrutura, std::string words[], int N, std::vector<std::string> c
 
     // follow commands
     for (const auto& command : commands) {
+        std::cout << command << std::endl;// debug
         if (command == "F") {
             // F: palavras mais frequentes
             int highestF = 1;
@@ -63,7 +64,7 @@ void doStuff(E estrutura, std::string words[], int N, std::vector<std::string> c
                 }
             }
             removeDuplicates(highest, tamHighest);
-            std::cout << "Palavra(s) mais frequente(s) (frequencia = " << highestF << "): " << std::endl;
+            //std::cout << "Palavra(s) mais frequente(s) (frequencia = " << highestF << "): " << std::endl;
             for (int i = 0; i < tamHighest; i++) {
                 if (highest[i] != "") {
                     std::cout << highest[i] << " ";
@@ -79,6 +80,7 @@ void doStuff(E estrutura, std::string words[], int N, std::vector<std::string> c
         }
         if (command == "L") {
             // L: quais as palavras mais longas
+            std::cout << "comeca a achar a maior " << std::endl;
             int length = 1;
             int tamLongest = 0; // numero de palavras q tem length tamanho
             std::string longest_words[N];
@@ -95,6 +97,7 @@ void doStuff(E estrutura, std::string words[], int N, std::vector<std::string> c
                     tamLongest++;
                 }
             }
+
             removeDuplicates(longest_words, tamLongest);
             std::cout << "Palavra(s) mais longa(s) (# letras = " << length << "): " << std::endl;
             for (int i = 0; i < tamLongest; i++) {
@@ -124,7 +127,7 @@ void doStuff(E estrutura, std::string words[], int N, std::vector<std::string> c
                 }
             }
             removeDuplicates(longest_words_SR, tamLongestSR);
-            std::cout << "Palavra(s) mais longa(s) sem letras repetidas (# letras = " << lengthSR << "): " << std::endl;
+            //std::cout << "Palavra(s) mais longa(s) sem letras repetidas (# letras = " << lengthSR << "): " << std::endl;
             for (int i = 0; i < tamLongestSR; i++) {
                 if (longest_words_SR[i] != "") {
                     std::cout << longest_words_SR[i] << " ";
@@ -161,7 +164,7 @@ void doStuff(E estrutura, std::string words[], int N, std::vector<std::string> c
                     }
                 }
             }
-            std::cout << "Palavra(s) com mais vogais sem repeticao (# vogais = " << mostVowels << ") e menor tamanho (# letras = " << shortestLengthVD << "): " << std::endl;
+            //std::cout << "Palavra(s) com mais vogais sem repeticao (# vogais = " << mostVowels << ") e menor tamanho (# letras = " << shortestLengthVD << "): " << std::endl;
             // printa todas as palavras com esse tamanho
             for (int i = 0; i < tamMost; i++) {
                 if (wordsWithMostVowels[i].length() == shortestLengthVD) {
@@ -193,7 +196,6 @@ int main() {
     while (std::getline(std::cin, line)) {
         commands.push_back(line);
     }
-    
     // choose structure 
     if (E == "VO") {
         VetorDinamicoOrdenado<std::string, Palavra> estrutura;
