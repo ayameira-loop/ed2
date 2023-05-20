@@ -40,7 +40,6 @@ template<class Key, class Item>
 void VetorDinamicoOrdenado<Key, Item>::show() {
     for (size_t i = 0; i < tam; i++)
     {
-        //std::cout << i << " - " << " { " << keys[i] << ", " << values[i] << " }" << std::endl;
         std::cout << i << " - " << " { " << keys[i] << ", " << values[i].toString() << " }" << std::endl;
     }
     
@@ -102,24 +101,13 @@ void VetorDinamicoOrdenado<Key, Item>::add(Key key, Item val) {
 
 template<class Key, class Item>
 Item VetorDinamicoOrdenado<Key, Item>::value(Key key) {
-    int l = 0;
-    int r = tam-1;
-    int mid = (l+r)/2;
     bool achou = false;
-    while (l <= r && achou == false) {
-        if (r == 0)
-            break;
-        mid = (l+r)/2;
-        if (keys[mid] == key)
-            achou = true;
-        if (keys[mid] < key)
-            l = mid + 1;
-        else
-            r = mid - 1;
-    }
-    if (achou == false)
+    int result = binarySearch(keys, key, 0, tam-1, achou);
+    if (achou == false) {
+        std::cout << "não achou a chave " << key  << std::endl;
         throw "Key não encontrada";
-    return values[mid];
+    }
+    return values[result-1];
 }
 
 // quais as palavras mais frequentes no texto (F);
@@ -128,8 +116,7 @@ void VetorDinamicoOrdenado<Key, Item>::mostFrequent() {
     int highestF = 1;
     int tamHighest = 0;
     std::string* highest = new std::string[tam];
-    for (size_t i = 0; i < tam; i++)
-    {
+    for (size_t i = 0; i < tam; i++) {
         if (values[i].getOcorrencias() > highestF) {
             highestF = values[i].getOcorrencias();
             highest[0] = keys[i];
@@ -139,8 +126,7 @@ void VetorDinamicoOrdenado<Key, Item>::mostFrequent() {
             tamHighest++;
         }
     }
-    for (size_t i = 0; i < tamHighest; i++)
-    {
+    for (size_t i = 0; i < tamHighest; i++) {
         std::cout << highest[i] << std::endl;
     }
     
