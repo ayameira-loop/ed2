@@ -18,8 +18,7 @@ std::string removeCharacters(std::string str) {
     return result;
 }
 
-void removeDuplicates(std::string* arr, int size)
-{
+void removeDuplicates(std::string* arr, int size) {
     for (int i = 0; i < size - 1; i++) {
         if (arr[i] == "") continue;  // Skip already removed elements
 
@@ -81,6 +80,7 @@ int main() {
             std::cout << highest[i] << " ";
         }
     }
+    std::cout << std::endl;
 
     // O: dada uma palavra, quantas vezes ocorre no texto
 
@@ -101,13 +101,14 @@ int main() {
             tamLongest++;
         }
     }
-    removeDuplicates(highest, tamLongest);
+    removeDuplicates(longest_words, tamLongest);
     std::cout << "Palavra(s) mais longa(s) (# letras = " << length << "): " << std::endl;
     for (int i = 0; i < tamLongest; i++) {
         if (longest_words[i] != "") {
             std::cout << longest_words[i] << " ";
         }
     }
+    std::cout << std::endl;
 
     // SR: quais as maiores palavras que nao repetem letras
     int lengthSR = 1;
@@ -127,13 +128,14 @@ int main() {
             tamLongestSR++;
         }
     }
-    removeDuplicates(highest, tamLongestSR);
+    removeDuplicates(longest_words_SR, tamLongestSR);
     std::cout << "Palavra(s) mais longa(s) sem letras repetidas (# letras = " << lengthSR << "): " << std::endl;
     for (int i = 0; i < tamLongestSR; i++) {
         if (longest_words_SR[i] != "") {
             std::cout << longest_words_SR[i] << " ";
         }
     }
+    std::cout << std::endl;
 
     // VD: quais as menores palavras com mais vogais sem repeticao
     int mostVowels = 1;
@@ -152,7 +154,7 @@ int main() {
             tamMost++;
         }
     }
-    removeDuplicates(highest, tamMost);
+    removeDuplicates(wordsWithMostVowels, tamMost);
     int shortestLengthVD = 5000;
     // encontra menor palavra em wordsWithMostVowels
     for (int i = 0; i < tamMost; i++) {
@@ -170,6 +172,7 @@ int main() {
             std::cout << wordsWithMostVowels[i] << " ";
         }
     }
+    std::cout << std::endl;
     
     return 0;
 }
