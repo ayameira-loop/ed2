@@ -7,6 +7,10 @@
 #include "Treap.h"
 #include "ArvoreBuscaBinaria.h"
 #include "RBTree.h"
+
+#include "TSArvore23.h"
+#include "A23.h"
+
 // cat .\moreWords | ./main
 
 using namespace std;
@@ -208,6 +212,9 @@ int main() {
         doStuff(estrutura, words, N, commands);
     } else if (E == "ARN") {
         RBTree<std::string, Palavra> estrutura;
+        doStuff(estrutura, words, N, commands);
+    } else if (E == "A23") {
+        A23<std::string, Palavra> estrutura;
         doStuff(estrutura, words, N, commands);
     } else {
         std::cout << "Invalid data structure" << std::endl;

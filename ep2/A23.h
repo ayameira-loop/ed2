@@ -56,18 +56,17 @@ class A23 {
                         root->val1 = val;
                         root->eh2no = false;
                     } else { // key == key1 -> atualiza valor
-                        root->val1 = val;
+                        root->val1.addOcorrencia();
                     }
                     cresceu = false;
                     return root;
                 } else { // é 3 no
                     if (root->key2 == key){
-                        root->val2 = val;
+                        root->val2.addOcorrencia();
                         cresceu = false;
                         return root;
-                    } else if (root->key1 == key){
-                        root->key1 = key;
-                        root->val1 = val;
+                    } else if (root->key1 == key) {
+                        root->val1.addOcorrencia();
                         cresceu = false;
                         return root;
                     }
@@ -82,15 +81,16 @@ class A23 {
                         newRight->val1 = root->val2;
                     } else if (key < root->key2) { // root (mantém key1) < newRoot (recebe key) < newRight (recebe key2)
                         newRight->key1 = root->key2;
-                        newRight->val2 = root->val2;
+                        newRight->val1 = root->val2;
                         newRoot->key1 = key;
                         newRoot->val1 = val;
                     } else { // key > root->key2    root (mantém key1) < newRoot (recebe key2) < newRight (recebe key)
                         newRight->key1 = key;
                         newRight->val1 = val;
                         newRoot->key1 = root->key2;
-                        newRoot->val2 = root->val2;
+                        newRoot->val1 = root->val2;
                     }
+                    root->p2 = nullptr;
                     newRight->eh2no = newRoot->eh2no = root->eh2no = true;
                     newRoot->p1 = root;
                     newRoot->p3 = newRight;
@@ -99,19 +99,19 @@ class A23 {
                 }
             }
             
-            if (root->eh2no && root->key1 == key){
-                root->val1 = val;
+            /*if (root->eh2no && root->key1 == key){
+                root->val1.addOcorrencia();
                 return root;
             } 
 
-            if (!(root->p1 == nullptr)) { // nao é folha
+            if (!(root->p1 == nullptr))*/ else { // nao é folha
                 if (!root->eh2no) {
                     if (root->key1 == key){
-                        root->val1 = val;
+                        root->val1.addOcorrencia();
                         return root;
                     } 
                     if (root->key2 == key){
-                        root->val2 = val;
+                        root->val2.addOcorrencia();
                         return root;
                     } 
                 }
@@ -138,6 +138,7 @@ class A23 {
                             root->key1 = p->key2;
                             root->val1 = p->val2;
                             root->p1 = root->p2;
+                            root->p2 = nullptr;
                             newRoot->eh2no = root->eh2no = p->eh2no = true;
                             cresceu = true;
                             return newRoot;
@@ -146,10 +147,10 @@ class A23 {
                         return root;
                     }
                 }
-                Key aux;
-                if (root->eh2no) aux = root->key1;
-                else aux = root->key2;
-                if (key > aux) {
+                Key tmp;
+                if (root->eh2no) tmp = root->key1;
+                else tmp = root->key2;
+                if (key > tmp) {
                     // é 3-nó e está vindo pela direita
                     // esquerda fica na esquerda
                     // antiga direita vai subir
@@ -169,6 +170,7 @@ class A23 {
                             newRoot->p1 = root;
                             newRoot->p3 = p;
                             root->p3 = root->p2;
+                            root->p2 = nullptr;
                             newRoot->eh2no = p->eh2no = root->eh2no = true;
                             cresceu = true;
                             return newRoot;
@@ -191,6 +193,7 @@ class A23 {
                         root->p3 = newRoot->p2;
                         newRoot->p1 = root;
                         newRoot->p3 = p;
+                        root->p2 = nullptr;
                         newRoot->eh2no = p->eh2no = root->eh2no = true;
                         return newRoot;
                     } else {
@@ -202,17 +205,19 @@ class A23 {
 
         Item searchRecursive(Node* root, Key key) {
             if (root == nullptr) return Item();
-            if (key == root->key1)
-                return root->val1;
-            if (key == root->key2)
-                return root->val2;
             if (root->eh2no) {
+                if (key == root->key1)
+                    return root->val1;
                 if (key < root->key1) { // procura pela esquerda
                     return searchRecursive(root->p1, key);
                 } else { // procura pela direita
-                    return searchRecursive(root->p2, key);
+                    return searchRecursive(root->p3, key);
                 }
             } else {
+                if (key == root->key1)
+                    return root->val1;
+                if (key == root->key2)
+                    return root->val2;
                 if (key < root->key1) { // procura pela esquerda
                     return searchRecursive(root->p1, key);
                 } else if (key > root->key2) { // procura pela direita
@@ -222,44 +227,72 @@ class A23 {
                 }
             }
         }
-
         void printRecursive(Node* node, bool isRoot) {
             if (node != nullptr) {
-                if (isRoot){
-                        if (node->eh2no) std::cout << "raiz = (" << node->key1 << ")" << std::endl;
-                        else  std::cout << "raiz = (" << node->key1 << " ; " << node->key2 << ")" << std::endl;
-                    } else {
-                        if (node->eh2no) std::cout << "(" << node->key1 << ")" << std::endl;
-                        else std::cout << "(" << node->key1 << " ; " << node->key2 << ")" << std::endl;
-                    }
-                    if (node->eh2no){
-                        if (node->p1 != nullptr){
-                            std::cout << "filho esquerdo de (" << node->key1 << ") = ";
-                            printRecursive(node->p1, false);
-                        }
-                        if (node->p3 != nullptr){
-                            std::cout << "filho direito de (" << node->key1 << ") = ";
-                            printRecursive(node->p3, false);
-                        }
-                        return;
-                    } else {
-                        if (node->p1 != nullptr){
-                            std::cout << "filho esquerdo de (" << node->key1 << " ; " << node->key2 << ") = ";
-                            printRecursive(node->p1, false);
-                        }
-                        if (node->p2 != nullptr){
-                            std::cout << "filho centro de (" << node->key1 << " ; " << node->key2 << ") = ";
-                            printRecursive(node->p2, false);
-                        }
-                        if (node->p3 != nullptr){
-                            std::cout << "filho direito de (" << node->key1  << " ; " << node->key2 << ") = ";
-                            printRecursive(node->p3, false);
-                        }
-                        return;
-                    }
+                if (node->eh2no) {
+                    printRecursive(node->p1, isRoot);
+                    if (node->key1 == "") {
+                        std::cout << "foi uma k1 de 2no" << std::endl;
+                        std::cout << node->p1->key1 << std::endl;
+                    } 
+                    std::cout << node->key1 << ": "<< node->val1.toString() << std::endl;
+                    printRecursive(node->p3, isRoot);
+                } else {
+                    printRecursive(node->p1, isRoot);
+                    if (node->key1 == "") {
+                        std::cout << "foi uma k1 de 3no" << std::endl;
+                    } 
+                    std::cout << node->key1 << ": "<< node->val1.toString() << std::endl;
+                    printRecursive(node->p2, isRoot);
+                    if (node->key2 == "") {
+                        std::cout << "foi uma k2 de 3no" << std::endl;
+                    } 
+                    std::cout << node->key2 << ": "<< node->val2.toString() << std::endl;
+                    printRecursive(node->p3, isRoot);
+                }
             }
         }
-
+    /*
+        void printRecursive(Node* node, bool isRoot) {
+            if (node != nullptr) {
+                if (isRoot) {
+                    if (node->eh2no) 
+                        std::cout << "raiz = (" << node->key1 << ")" << std::endl;
+                    else
+                        std::cout << "raiz = (" << node->key1 << " ; " << node->key2 << ")" << std::endl;
+                } else {
+                    if (node->eh2no) 
+                        std::cout << "(" << node->key1 << ")" << std::endl;
+                    else 
+                        std::cout << "(" << node->key1 << ": " << node->val1.toString() << " ; " << node->key2 << ": " << node->val2.toString() << ")" << std::endl;
+                }
+                if (node->eh2no){
+                    if (node->p1 != nullptr){
+                        std::cout << "filho esquerdo de (" << node->key1 << ") = ";
+                        printRecursive(node->p1, false);
+                    }
+                    if (node->p3 != nullptr){
+                        std::cout << "filho direito de (" << node->key1 << ") = ";
+                        printRecursive(node->p3, false);
+                    }
+                    return;
+                } else {
+                    if (node->p1 != nullptr){
+                        std::cout << "filho esquerdo de (" << node->key1 << " ; " << node->key2 << ") = ";
+                        printRecursive(node->p1, false);
+                    }
+                    if (node->p2 != nullptr){
+                        std::cout << "filho centro de (" << node->key1 << " ; " << node->key2 << ") = ";
+                        printRecursive(node->p2, false);
+                    }
+                    if (node->p3 != nullptr){
+                        std::cout << "filho direito de (" << node->key1  << " ; " << node->key2 << ") = ";
+                        printRecursive(node->p3, false);
+                    }
+                    return;
+                }
+            }
+        }*/
     public:
         A23();
         ~A23();
