@@ -36,7 +36,7 @@ void removeDuplicates(std::string* arr, int size) {
 }
 
 template<typename E>
-void doStuff(E estrutura, std::string words[], int N, std::vector<std::string> commands) {
+void followCommands(E estrutura, std::string words[], int N, std::vector<std::string> commands) {
     // populate structure
     std::string cleanWords[N];
     for (int i = 0; i < N; i++) {
@@ -48,7 +48,7 @@ void doStuff(E estrutura, std::string words[], int N, std::vector<std::string> c
 
     // follow commands
     for (const auto& command : commands) {
-        std::cout << command << std::endl;// debug
+        //std::cout << command << std::endl;// debug
         if (command == "F") {
             // F: palavras mais frequentes
             int highestF = 1;
@@ -84,7 +84,6 @@ void doStuff(E estrutura, std::string words[], int N, std::vector<std::string> c
         }
         if (command == "L") {
             // L: quais as palavras mais longas
-            std::cout << "comeca a achar a maior " << std::endl;
             int length = 1;
             int tamLongest = 0; // numero de palavras q tem length tamanho
             std::string longest_words[N];
@@ -103,7 +102,7 @@ void doStuff(E estrutura, std::string words[], int N, std::vector<std::string> c
             }
 
             removeDuplicates(longest_words, tamLongest);
-            std::cout << "Palavra(s) mais longa(s) (# letras = " << length << "): " << std::endl;
+            //std::cout << "Palavra(s) mais longa(s) (# letras = " << length << "): " << std::endl;
             for (int i = 0; i < tamLongest; i++) {
                 if (longest_words[i] != "") {
                     std::cout << longest_words[i] << " ";
@@ -185,7 +184,6 @@ int main() {
     std::string E;
     std::cin >> E;
 
-
     // build array with N words
     int N; 
     std::cin >> N;
@@ -200,22 +198,23 @@ int main() {
     while (std::getline(std::cin, line)) {
         commands.push_back(line);
     }
+
     // choose structure 
     if (E == "VO") {
         VetorDinamicoOrdenado<std::string, Palavra> estrutura;
-        doStuff(estrutura, words, N, commands);
+        followCommands(estrutura, words, N, commands);
     } else if (E == "ABB") {
         ArvoreBuscaBinaria<std::string, Palavra> estrutura;
-        doStuff(estrutura, words, N, commands);
+        followCommands(estrutura, words, N, commands);
     } else if (E == "TR") {
         Treap<std::string, Palavra> estrutura;
-        doStuff(estrutura, words, N, commands);
+        followCommands(estrutura, words, N, commands);
     } else if (E == "ARN") {
         RBTree<std::string, Palavra> estrutura;
-        doStuff(estrutura, words, N, commands);
+        followCommands(estrutura, words, N, commands);
     } else if (E == "A23") {
         A23<std::string, Palavra> estrutura;
-        doStuff(estrutura, words, N, commands);
+        followCommands(estrutura, words, N, commands);
     } else {
         std::cout << "Invalid data structure" << std::endl;
         return -1;

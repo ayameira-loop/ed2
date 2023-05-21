@@ -5,6 +5,7 @@
 #include "Palavra.h"
 #include "Treap.h"
 #include "ArvoreBuscaBinaria.h"
+#include "A23.h"
 #include "RBTree.h"
 // cat .\moreWords | ./crono
 // cat .\fullSherlock | ./crono
@@ -73,6 +74,10 @@ int main() {
 
     } else if (E == "ARN") {
         RBTree<std::string, Palavra> estrutura;
+        testTime(estrutura, cleanWords, N);
+
+    } else if (E == "A23") {
+        A23<std::string, Palavra> estrutura;
         testTime(estrutura, cleanWords, N);
 
     } else {

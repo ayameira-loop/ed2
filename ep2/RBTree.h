@@ -210,7 +210,6 @@ class RBTree {
             else {
                 return searchRecursive(root->right, key);
             }
-
         }
         
     public:

@@ -4,8 +4,6 @@
 
 using namespace std;
 
-
-
 template <class Key, class Item>
 class Node23 {
     public:
