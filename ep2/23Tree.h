@@ -36,6 +36,7 @@ class A23 {
                 delete root;
             }
         }
+
         Node* put23(Node* root, Key key, Item val, bool &cresceu) {
             if (root == nullptr) { // árvode vazia -> inicializa a árvore
                 root = new Node(key, val);
@@ -57,97 +58,118 @@ class A23 {
                     } else { // key == key1 -> atualiza valor
                         root->val1 = val;
                     }
+                    cresceu = false;
                     return root;
                 } else { // é 3 no
+                    if (root->key2 == key){
+                        root->val2 = val;
+                        cresceu = false;
+                        return root;
+                    } else if (root->key1 == key){
+                        root->key1 = key;
+                        root->val1 = val;
+                        cresceu = false;
+                        return root;
+                    }
                     Node* newRoot = new Node();
                     Node* newRight = new Node();
                     if (key < root->key1) { // root (recebe key) < newRoot (recebe key1) < newRight (recebe key2)
                         newRoot->key1 = root->key1;
                         newRoot->val1 = root->val1;
-                        newRight->key1 = root->key2;
-                        newRight->val1 = root->val2;
-                        newRoot->p1 = root;
-                        newRoot->p2 = newRight;
                         root->key1 = key;
                         root->val1 = val;
+                        newRight->key1 = root->key2;
+                        newRight->val1 = root->val2;
                     } else if (key < root->key2) { // root (mantém key1) < newRoot (recebe key) < newRight (recebe key2)
-                        newRoot->key1 = key;
-                        newRoot->val1 = val;
                         newRight->key1 = root->key2;
                         newRight->val2 = root->val2;
-                        newRoot->p1 = root;
-                        newRoot->p2 = newRight;
+                        newRoot->key1 = key;
+                        newRoot->val1 = val;
                     } else { // key > root->key2    root (mantém key1) < newRoot (recebe key2) < newRight (recebe key)
-                        newRoot->key1 = root->key2;
-                        newRoot->val2 = root->val2;
                         newRight->key1 = key;
                         newRight->val1 = val;
+                        newRoot->key1 = root->key2;
+                        newRoot->val2 = root->val2;
                     }
-                    root->eh2no = false;
-                    //nullptr root->key2 = nullptr;
-                    //nullptr root->val2 = nullptr;
+                    newRight->eh2no = newRoot->eh2no = root->eh2no = true;
+                    newRoot->p1 = root;
+                    newRoot->p3 = newRight;
                     cresceu = true;
                     return newRoot; 
                 }
-            } else { // não é folha
+            }
+            
+            if (root->eh2no && root->key1 == key){
+                root->val1 = val;
+                return root;
+            } 
+
+            if (!(root->p1 == nullptr)) { // nao é folha
+                if (!root->eh2no) {
+                    if (root->key1 == key){
+                        root->val1 = val;
+                        return root;
+                    } 
+                    if (root->key2 == key){
+                        root->val2 = val;
+                        return root;
+                    } 
+                }
                 if (root->key1 > key) {
                     Node* p = put23(root->p1, key, val, cresceu);
                     if (cresceu) {
                         if (root->eh2no) { // consigo só inserir
                             root->key2 = root->key1;
                             root->val2 = root->val1;
-                            root->p3 = root->p2;
                             root->key1 = p->key1;
                             root->val1 = p->val1;
-                            root->p2 = p->p2;
+                            root->p1 = p->p1;
+                            root->p2 = p->p3;
                             root->eh2no = false;
                             cresceu = false;
+                            delete p;
                             return root;
                         } else {
-                            Node* newRight = new Node(root->key2, root->val2);
-                            newRight->p2 = root->p3;
-                            newRight->p1 = root->p2;
-                            Node* newRoot = new Node(root->key1, root->val1);
-                            newRoot->p1 = root;
-                            newRoot->p2 = newRight;
-                            root->key1 = p->key1;
-                            root->val1 = p->val1;
-                            //nullptr root->key2 = nullptr;
-                            //nullptr root->val2 = nullptr;
-                            root->p3 = nullptr;
-                            root->eh2no = true;
-                            root->p2 = p->p2; 
-                            delete(p);
+                            Node* newRoot = new Node();
+                            newRoot->key1 = root->key1;
+                            newRoot->val1 = root->val1;
+                            newRoot->p1 = p;
+                            newRoot->p3 = root;
+                            root->key1 = p->key2;
+                            root->val1 = p->val2;
+                            root->p1 = root->p2;
+                            newRoot->eh2no = root->eh2no = p->eh2no = true;
                             cresceu = true;
                             return newRoot;
                         }
                     } else { // não cresceu
-                        root->p1 = p; // precisa?
-                        cresceu = false; // precisa?
                         return root;
                     }
-                } else if (root->eh2no || root->key2 > key) {
-                    Node* p = put23(root->p2, key, val, cresceu);
+                }
+                Key aux;
+                if (root->eh2no) aux = root->key1;
+                else aux = root->key2;
+                if (key > aux) {
+                    // é 3-nó e está vindo pela direita
+                    // esquerda fica na esquerda
+                    // antiga direita vai subir
+                    Node* p = put23(root->p3, key, val, cresceu);
                     if (cresceu) {
                         if (root->eh2no) {
                             root->key2 = p->key1;
                             root->val2 = p->val1;
-                            root->p3 = p->p2;
-                            //root->p2 = p->p1 (acho que fica igual então estou comentando)
+                            root->p2 = p->p1;
+                            root->p3 = p->p3;
                             // p1/esquerda permanece inalterada
                             root->eh2no = false;
                             cresceu = false;
                             return root;
                         } else {
-                            Node* newRight = new Node(root->key2, root->val2);
-                            newRight->p2 = root->p3;
-                            newRight->p1 = p->p2;
-                            Node* newRoot = new Node(p->key1, p->val1); // já está vindo pelo meio, então vai subir mais
+                            Node* newRoot = new Node(root->key2, root->val2); // já está vindo pelo meio, então vai subir mais
                             newRoot->p1 = root;
-                            newRoot->p2 = newRight;
-                            root->p3 = nullptr;
-                            root->eh2no = true;
-                            delete(p);
+                            newRoot->p3 = p;
+                            root->p3 = root->p2;
+                            newRoot->eh2no = p->eh2no = root->eh2no = true;
                             cresceu = true;
                             return newRoot;
                         }
@@ -155,17 +177,21 @@ class A23 {
                         // falta algo?
                         return root;
                     }
-                } else { // é 3-nó e está vindo pela direita
-                    Node* p = put23(root->p3, key, val, cresceu);
+                }
+                if ((!root->eh2no) && (root->key2 > key) && (key > root->key1)) {
+                    Node* p = put23(root->p2, key, val, cresceu);
                     if (cresceu) {
-                        // p vai entrar no lugar de newRight
-                        // esquerda fica na esquerda
-                        // antiga direita vai subir
-                        Node* newRoot = new Node(root->key2, root->val2);
-                        newRoot->p2 = p;
+                        Node* newRoot = new Node(root->key1, root->val1);
+                        newRoot->p2 = p->p1;
                         newRoot->p1 = root;
-                        root->p3 = nullptr;
-                        root->eh2no = true;
+                        p->key1 = root->key2;
+                        p->val1 = root->val2;
+                        p->p1 = p->p3;
+                        p->p3 = root->p3;
+                        root->p3 = newRoot->p2;
+                        newRoot->p1 = root;
+                        newRoot->p3 = p;
+                        newRoot->eh2no = p->eh2no = root->eh2no = true;
                         return newRoot;
                     } else {
                         return root;
@@ -175,6 +201,7 @@ class A23 {
         }
 
         Item searchRecursive(Node* root, Key key) {
+            if (root == nullptr) return Item();
             if (key == root->key1)
                 return root->val1;
             if (key == root->key2)
@@ -196,34 +223,40 @@ class A23 {
             }
         }
 
-        void printRecursive(Node* node, int level) {
-            int space = 3;
+        void printRecursive(Node* node, bool isRoot) {
             if (node != nullptr) {
-                if (node->eh2no) {
-                    printRecursive(node->p3, level + space);
-                    /*for (int i = 0; i < level; i++) {
-                        std::cout << "   ";
-                    }*/
-                    std::cout << "K2:" << node->key2 << std::endl;
-                    printRecursive(node->p2, level + space);
-                    std::cout << "K1:" << node->key1 << std::endl;
-                    printRecursive(node->p1, level + space);
-                    /*for (int i = 0; i < level; i++) {
-                        std::cout << "   ";
-                    }*/
-                } else {
-                    printRecursive(node->p2, level + space);
-                    /*for (int i = 0; i < level; i++) {
-                        std::cout << "   ";
-                    }*/
-                    std::cout << "K1:" << node->key1 << std::endl;
-                    printRecursive(node->p1, level + space);
-                }
-                /*
-                for (int i = 0; i < level; i++) {
-                    std::cout << "   ";
-                }
-                */
+                if (isRoot){
+                        if (node->eh2no) std::cout << "raiz = (" << node->key1 << ")" << std::endl;
+                        else  std::cout << "raiz = (" << node->key1 << " ; " << node->key2 << ")" << std::endl;
+                    } else {
+                        if (node->eh2no) std::cout << "(" << node->key1 << ")" << std::endl;
+                        else std::cout << "(" << node->key1 << " ; " << node->key2 << ")" << std::endl;
+                    }
+                    if (node->eh2no){
+                        if (node->p1 != nullptr){
+                            std::cout << "filho esquerdo de (" << node->key1 << ") = ";
+                            printRecursive(node->p1, false);
+                        }
+                        if (node->p3 != nullptr){
+                            std::cout << "filho direito de (" << node->key1 << ") = ";
+                            printRecursive(node->p3, false);
+                        }
+                        return;
+                    } else {
+                        if (node->p1 != nullptr){
+                            std::cout << "filho esquerdo de (" << node->key1 << " ; " << node->key2 << ") = ";
+                            printRecursive(node->p1, false);
+                        }
+                        if (node->p2 != nullptr){
+                            std::cout << "filho centro de (" << node->key1 << " ; " << node->key2 << ") = ";
+                            printRecursive(node->p2, false);
+                        }
+                        if (node->p3 != nullptr){
+                            std::cout << "filho direito de (" << node->key1  << " ; " << node->key2 << ") = ";
+                            printRecursive(node->p3, false);
+                        }
+                        return;
+                    }
             }
         }
 
