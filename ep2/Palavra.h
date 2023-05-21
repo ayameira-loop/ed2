@@ -71,8 +71,9 @@ private:
 
     bool repeteLetra(std::string word) {
         std::string allLowerWord = toLowerCase(word);
-        for (int i = 0; i < allLowerWord.length() - 1; i++) {
-            for (int j = i + 1; j < allLowerWord.length(); j++) {
+        int len = allLowerWord.length();
+        for (int i = 0; i < len - 1; i++) {
+            for (int j = i + 1; j < len; j++) {
                 if (allLowerWord[i] == allLowerWord[j]) {
                     return true;
                 }

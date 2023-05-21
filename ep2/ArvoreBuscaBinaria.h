@@ -32,17 +32,14 @@ class ArvoreBuscaBinaria {
             if (key < root->key) {
                 root->left = addRecursive(root->left, key, val);
                 return root;
-            }
-            if (key > root->key) {
+            } else if (key > root->key) {
                 root->right = addRecursive(root->right, key, val);
                 return root;
-            }
-            if (key == root->key) {
+            } else { // (key == root->key)
                 root->val.addOcorrencia();
                 return root;
             }
         }
-
 
         void printRecursive(Node* node, int level) {
             if (node != nullptr) {

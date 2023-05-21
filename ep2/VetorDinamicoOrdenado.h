@@ -69,7 +69,7 @@ void VetorDinamicoOrdenado<Key, Item>::add(Key key, Item val) {
     if (tam == cap) {
         Key* newKeys = new Key[cap*2];
         Item* newVals = new Item[cap*2];
-        for (size_t i = 0; i < cap; i++)
+        for (int i = 0; i < cap; i++)
         {
             newKeys[i] = keys[i];
             newVals[i] = values[i];
