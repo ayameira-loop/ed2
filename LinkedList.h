@@ -10,7 +10,6 @@ private:
     };
 
     Node* head;
-    Node* tail;
     int n;
 
 public:

@@ -1,0 +1,109 @@
+cat lorem1000 | ./crono
+cat sherlock | ./crono
+cat A_travers_les_cactus | ./crono
+cat cppgiga200 | ./crono
+cat cppgiga400 | ./crono
+
+VO
+aya@aya-ayaes:~/Documents/ed2/ep2$ cat lorem1000 | ./crono
+VO
+Tempo para montar a tabela: 0.004145 ms
+Tempo para fazer 1000 consultas a tabela: 0.000331 ms
+
+aya@aya-ayaes:~/Documents/ed2/ep2$ cat sherlock | ./crono
+VO
+Tempo para montar a tabela: 0.059415 ms
+Tempo para fazer 12359 consultas a tabela: 0.004676 ms
+
+aya@aya-ayaes:~/Documents/ed2/ep2$ cat A_travers_les_cactus | ./crono
+VO
+Tempo para montar a tabela: 0.518041 ms
+Tempo para fazer 47321 consultas a tabela: 0.025538 ms
+
+aya@aya-ayaes:~/Documents/ed2/ep2$ cat cppgiga200 | ./crono
+VO
+Tempo para montar a tabela: 3.15229 ms
+Tempo para fazer 200000 consultas a tabela: 0.097135 ms
+
+aya@aya-ayaes:~/Documents/ed2/ep2$ cat cppgiga400 | ./crono
+VO
+Tempo para montar a tabela: 6.42918 ms
+Tempo para fazer 400000 consultas a tabela: 0.181241 ms
+
+
+
+
+ABB
+aya@aya-ayaes:~/Documents/ed2/ep2$ cat lorem1000 | ./crono
+ABB
+Tempo para montar a tabela: 0.006458 ms
+Tempo para fazer 1000 consultas a tabela: 0.001039 ms
+
+aya@aya-ayaes:~/Documents/ed2/ep2$ cat sherlock | ./crono
+ABB
+Tempo para montar a tabela: 0.034048 ms
+Tempo para fazer 12359 consultas a tabela: 0.009168 ms
+
+aya@aya-ayaes:~/Documents/ed2/ep2$ cat A_travers_les_cactus | ./crono
+ABB
+Tempo para montar a tabela: 0.142883 ms
+Tempo para fazer 47321 consultas a tabela: 0.039643 ms
+
+aya@aya-ayaes:~/Documents/ed2/ep2$ cat cppgiga200 | ./crono
+ABB
+Tempo para montar a tabela: 0.773736 ms
+Tempo para fazer 200000 consultas a tabela: 0.237936 ms
+
+aya@aya-ayaes:~/Documents/ed2/ep2$ cat cppgiga400 | ./crono
+ABB
+Tempo para montar a tabela: 1.34995 ms
+Tempo para fazer 400000 consultas a tabela: 0.39355 ms
+
+
+
+
+TR
+aya@aya-ayaes:~/Documents/ed2/ep2$ cat lorem1000 | ./crono
+TR
+Tempo para montar a tabela: 0.003617 ms
+Tempo para fazer 1000 consultas a tabela: 0.000535 ms
+aya@aya-ayaes:~/Documents/ed2/ep2$ cat sherlock | ./crono
+TR
+Tempo para montar a tabela: 0.033389 ms
+Tempo para fazer 12359 consultas a tabela: 0.009386 ms
+aya@aya-ayaes:~/Documents/ed2/ep2$ cat A_travers_les_cactus | ./crono
+TR
+Tempo para montar a tabela: 0.154661 ms
+Tempo para fazer 47321 consultas a tabela: 0.049519 ms
+aya@aya-ayaes:~/Documents/ed2/ep2$ cat cppgiga200 | ./crono
+TR
+Tempo para montar a tabela: 0.722072 ms
+Tempo para fazer 200000 consultas a tabela: 0.25588 ms
+aya@aya-ayaes:~/Documents/ed2/ep2$ cat cppgiga400 | ./crono
+TR
+Tempo para montar a tabela: 1.19668 ms
+Tempo para fazer 400000 consultas a tabela: 0.375917 ms
+
+
+ARN
+aya@aya-ayaes:~/Documents/ed2/ep2$ cat lorem1000 | ./crono
+ARN
+Tempo para montar a tabela: 0.005946 ms
+Tempo para fazer 1000 consultas a tabela: 0.000612 ms
+aya@aya-ayaes:~/Documents/ed2/ep2$ cat sherlock | ./crono
+ARN
+Tempo para montar a tabela: 0.032827 ms
+Tempo para fazer 12359 consultas a tabela: 0.006497 ms
+aya@aya-ayaes:~/Documents/ed2/ep2$ cat A_travers_les_cactus | ./crono
+ARN
+Tempo para montar a tabela: 0.141884 ms
+Tempo para fazer 47321 consultas a tabela: 0.031911 ms
+aya@aya-ayaes:~/Documents/ed2/ep2$ cat cppgiga200 | ./crono
+ARN
+Tempo para montar a tabela: 0.674889 ms
+Tempo para fazer 200000 consultas a tabela: 0.147445 ms
+aya@aya-ayaes:~/Documents/ed2/ep2$ cat cppgiga400 | ./crono
+ARN
+Tempo para montar a tabela: 1.16915 ms
+Tempo para fazer 400000 consultas a tabela: 0.29757 ms
+aya@aya-ayaes:~/Documents/ed2/ep2$ 
