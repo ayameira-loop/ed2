@@ -3,6 +3,7 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
+#include "Graph.h"
 
 // Function to generate random DNA strings of length N
 std::string generateDNAString(int N) {
@@ -19,29 +20,30 @@ std::string generateDNAString(int N) {
 }
 
 // Function to break DNA string into chunks
-void breakIntoChunks(const std::string& word, const std::vector<int>& startOfChunks, const std::vector<int>& endOfChunks) {
+void breakIntoChunks(const std::string& word, const std::vector<int>& startOfChunks, const std::vector<int>& endOfChunks, std::vector<std::string>& chunks) {
     for (int i = 0; i < startOfChunks.size(); i++) {
         int start = startOfChunks[i];
         int end = endOfChunks[i];
         std::string chunk = word.substr(start, end - start + 1);
-        std::cout << "Chunk " << i + 1 << ": " << chunk << std::endl;
+        chunks.push_back(chunk);
+        //std::cout << "Chunk " << i + 1 << ": " << chunk << std::endl;
     }
 }
 
 int main() {
     srand(time(0)); // Seed the random number generator
 
-    int N; // Length of DNA string
-    std::cout << "Enter the length of the DNA string: ";
-    std::cin >> N;
+    int N = 30; // Length of DNA string
+    /*std::cout << "Enter the length of the DNA string: ";
+    std::cin >> N;*/ 
 
-    int meanChunkSize; // Mean chunk length
-    std::cout << "Enter the mean chunk length: ";
-    std::cin >> meanChunkSize;
+    int meanChunkSize = 6; // Mean chunk length
+    /*std::cout << "Enter the mean chunk length: ";
+    std::cin >> meanChunkSize;*/
 
-    int var; // Variance
-    std::cout << "Enter the variance: ";
-    std::cin >> var;
+    int var = 2; // Variance
+    /*std::cout << "Enter the variance: ";
+    std::cin >> var;*/
 
     std::vector<int> startOfChunks(0);
     std::vector<int> endOfChunks(0);
@@ -69,8 +71,23 @@ int main() {
     std::string dnaString = generateDNAString(N);
     std::cout << "Generated DNA string: " << dnaString << std::endl;
 
+    std::vector<std::string> chunks(0);
+
     std::cout << "\nBreaking DNA string into chunks:\n";
-    breakIntoChunks(dnaString, startOfChunks, endOfChunks);
+    breakIntoChunks(dnaString, startOfChunks, endOfChunks, chunks);
+
+    
+    int V = chunks.size();
+    Graph G(V);
+
+    for (int i = 0; i < chunks.size(); i++)
+    {
+        G.setVertexValue(i, chunks[i]);
+    }
+
+    G.printGraph();
+
+    int k = 2;
 
     return 0;
 }
