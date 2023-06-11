@@ -108,7 +108,6 @@ public:
         }
     }
     
-    
     void highestWeightPath(int src, std::vector<int>& path, std::vector<bool>& visited, std::vector<int>& maxPath, int& maxWeight) {
         visited[src] = true;
         path.push_back(src);
@@ -160,48 +159,29 @@ public:
         stack.push(v);
     }
 
-void longestPath(int s)
-{
-    std::stack<int> stack;
-    std::vector<bool> visited(V, false);
-    std::vector<int> dist(V, NINF);
-   
-    // Call the recursive helper function to store Topological
-    // Sort starting from all vertices one by one
-    for (int i = 0; i < V; i++)
-        if (!visited[i])
-            topologicalSortUtil(i, visited, stack);
-   
-    // distance to source as 0
-    /*
-    dist[s] =   0;
+    std::vector<int> topologicalSort() {
+        std::vector<bool> visited(V, false);
+        std::stack<int> sortedStack;
 
-    // Process vertices in topological order
-    while (stack.empty() == false) {
-        // Get the next vertex from topological order
-        int u = stack.top();
-        stack.pop();
-   
-        // Update distances of all adjacent vertices
-        if (dist[u] != NINF) {
-            for (int adjVertex : adj[u]) {
-                if (dist[adjVertex] < dist[u] + weights[adjVertex])
-                    dist[adjVertex] = dist[u] + weights[adjVertex];
-            }
+        for (int i = 0; i < V; ++i) {
+            if (!visited[i])
+                topologicalSortUtil(i, visited, sortedStack);
         }
-    }
-   
-    // Print the calculated longest distances
-    for (int i = 0; i < V; i++)
-        (dist[i] == NINF) ? std::cout << "INF " : std::cout << dist[i] << " ";
 
-    */
-}
+        std::vector<int> topologOrder;
+        while (!sortedStack.empty()) {
+            topologOrder.push_back(sortedStack.top());
+            sortedStack.pop();
+        }
+
+        return topologOrder;
+    }
+
     void printGraph() {
         for (int i = 0; i < V; ++i) {
             std::cout << "Vertex " << i << " (" << vertices[i] << "): ";
             for (int j : adj[i]) {
-                std::cout << vertices[j] << " ";
+                std::cout << vertices[j] << " (w: " << weights[i][j] << ") ";
             }
             std::cout << std::endl;
         }
@@ -210,7 +190,7 @@ void longestPath(int s)
 
 int main() {
     // Create a graph with 5 vertices
-    int V=7;
+    int V = 6;
     Graph graph(V);
 
     // Set values for vertices
@@ -220,17 +200,14 @@ int main() {
     graph.setVertexValue(3, "3");
     graph.setVertexValue(4, "4");
     graph.setVertexValue(5, "5");
-    graph.setVertexValue(6, "6");
 
     // Add edges to the graph
-    graph.addEdge(0, 1, 1);
-    graph.addEdge(0, 4, 1);
-    graph.addEdge(1, 3, 1);
-    graph.addEdge(4, 5, 1);
-    graph.addEdge(1, 6, 1);
-    graph.addEdge(6, 5, 1);
-    graph.addEdge(3, 2, 1);
-    graph.addEdge(2, 1, 1);
+    graph.addEdge(5, 2, 1);
+    graph.addEdge(5, 0, 1);
+    graph.addEdge(4, 0, 1);
+    graph.addEdge(4, 1, 1);
+    graph.addEdge(2, 3, 1);
+    graph.addEdge(3, 1, 1);
 
     // Is it cyclic?
     std::cout << "Cycle?" << std::endl;
@@ -245,21 +222,12 @@ int main() {
     }
 
     // Perform topological sorting
-    std::stack<int> sortedStack;
-    std::vector<bool> visited(V, false);
-
-    for (int i = 0; i < V; ++i) {
-        if (!visited[i]) {
-            graph.topologicalSortUtil(i, visited, sortedStack);
-        }
-    }
+    std::vector<int> topOrder = graph.topologicalSort();
 
     // Print the topological order
-    std::cout << "Topological order: ";
-    while (!sortedStack.empty()) {
-        std::cout << sortedStack.top() << " ";
-        sortedStack.pop();
-    }
+    std::cout << "Topological order: " << std::endl;
+    for (int vertex : topOrder)
+        std::cout << topOrder[vertex] << " ";
     std::cout << std::endl;
 
     // Print the longest path

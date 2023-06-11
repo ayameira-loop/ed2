@@ -1,25 +1,16 @@
 #include <iostream>
 #include <string>
 
-bool checkMatch(std::string& first, std::string& second, int k) {
-    std::string firstSuffix = first.substr(first.length() - k, k);
-    std::string secondPrefix = second.substr(0, k);
-
-    return firstSuffix == secondPrefix;
-}
-
-void myCheckMatch(std::string& first, std::string& second, int k) {
-    bool match = true;
-    int i = k;
-    while (match && i < first.length()-1 && i < second.length() - 1) {
+int findLargestMatchingSubst(std::string& first, std::string& second, int k) {
+    int i = 0;
+    int highestK = 0;
+    while (i < first.length()-1 && i < second.length() - 1) {
         std::string firstSuffix = first.substr(first.length() - i, i);
         std::string secondPrefix = second.substr(0, i);
-        std::cout << "comparing " << firstSuffix << " and " << secondPrefix << std::endl;
-        match = firstSuffix == secondPrefix;
-        if (match) i++;
+        if (firstSuffix == secondPrefix)    highestK = i;
+        i++;
     }
-    std::cout << i << std::endl;
-    return;
+    return highestK;
 }
 
 int main() {
@@ -28,13 +19,9 @@ int main() {
 
     int k = 2;
 
-    if (checkMatch(first, second, k)) {
-        std::cout << "The first " << k << " characters of the second string match the last " << k << " characters of the first string." << std::endl;
-    } else {
-        std::cout << "The first " << k << " characters of the second string do not match the last " << k << " characters of the first string." << std::endl;
-    }
+    int result = findLargestMatchingSubst(first, second, k);
 
-    myCheckMatch(first, second, k);
+    std::cout << "Integer result: " << result << std::endl;
 
     return 0;
 }

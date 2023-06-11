@@ -5,8 +5,8 @@
 #include <ctime>
 #include "Graph.h"
 
-// Function to generate random DNA strings of length N
 std::string generateDNAString(int N) {
+    /* Function to generate random DNA strings of length N */
     std::string dnaString;
     static const char letters[] = {'A', 'G', 'C', 'T'};
     int numLetters = sizeof(letters) / sizeof(letters[0]);
@@ -19,8 +19,8 @@ std::string generateDNAString(int N) {
     return dnaString;
 }
 
-// Function to break DNA string into chunks
 void breakIntoChunks(const std::string& word, const std::vector<int>& startOfChunks, const std::vector<int>& endOfChunks, std::vector<std::string>& chunks) {
+    /* Function to break DNA string into chunks */ 
     for (int i = 0; i < startOfChunks.size(); i++) {
         int start = startOfChunks[i];
         int end = endOfChunks[i];
@@ -30,18 +30,32 @@ void breakIntoChunks(const std::string& word, const std::vector<int>& startOfChu
     }
 }
 
+int findLargestMatchingSubst(std::string& first, std::string& second, int k) {
+    /* Function to find how many letters of the end of the first string can match with the beginning of the second string. 
+       Returns highest match possible */
+    int i = 0;
+    int highestK = 0;
+    while (i < first.length()-1 && i < second.length() - 1) {
+        std::string firstSuffix = first.substr(first.length() - i, i);
+        std::string secondPrefix = second.substr(0, i);
+        if (firstSuffix == secondPrefix)    highestK = i;
+        i++;
+    }
+    return highestK;
+}
+
 int main() {
     srand(time(0)); // Seed the random number generator
 
-    int N = 30; // Length of DNA string
+    int N = 150; // Length of DNA string
     /*std::cout << "Enter the length of the DNA string: ";
     std::cin >> N;*/ 
 
-    int meanChunkSize = 6; // Mean chunk length
+    int meanChunkSize = 8; // Mean chunk length
     /*std::cout << "Enter the mean chunk length: ";
     std::cin >> meanChunkSize;*/
 
-    int var = 2; // Variance
+    int var = 3; // Variance
     /*std::cout << "Enter the variance: ";
     std::cin >> var;*/
 
@@ -77,15 +91,52 @@ int main() {
     breakIntoChunks(dnaString, startOfChunks, endOfChunks, chunks);
     
     int V = chunks.size();
+    int k = 2;
     Graph G(V);
+    std::cout << "Number of vertices: " << V << std::endl;
 
     for (int i = 0; i < chunks.size(); i++) {
         G.setVertexValue(i, chunks[i]);
     }
 
-    G.printGraph();
+    for (int i = 0; i < chunks.size(); i++) {
+        for (int j = i+1; j < chunks.size(); j++) {
+            int L = findLargestMatchingSubst(chunks[i], chunks[j], k);
+            if (L >= k)
+                G.addEdge(i, j, L);
+        }
+    }
 
-    int k = 2;
+    // Is it cyclic?
+    std::cout << "Cycle?" << std::endl;
+    std::cout << G.isCyclic() << std::endl;
+    //G.printGraph();
+
+    if (G.isCyclic()) {
+        G.makeAcyclic();
+        std::cout << "Cycle?" << std::endl;
+        std::cout << G.isCyclic() << std::endl;
+        //G.printGraph();
+    }
+
+    std::cout << "Finding highest weight path" << std::endl;
+
+    std::vector<int> path = G.findHighestWeightPath();
+
+    int prev = -1;
+    std::string reconstructedDNA = "";
+
+    for (int vertex : path) {
+        if (prev != -1)
+            reconstructedDNA = reconstructedDNA + G.getValueAt(vertex).substr(G.getWeight(prev,vertex));
+        else
+            reconstructedDNA = reconstructedDNA + G.getValueAt(vertex);
+        prev = vertex;
+    }
+
+    std::cout << reconstructedDNA << std::endl;
+
 
     return 0;
 }
+
