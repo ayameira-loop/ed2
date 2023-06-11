@@ -75,13 +75,11 @@ int main() {
 
     std::cout << "\nBreaking DNA string into chunks:\n";
     breakIntoChunks(dnaString, startOfChunks, endOfChunks, chunks);
-
     
     int V = chunks.size();
     Graph G(V);
 
-    for (int i = 0; i < chunks.size(); i++)
-    {
+    for (int i = 0; i < chunks.size(); i++) {
         G.setVertexValue(i, chunks[i]);
     }
 
