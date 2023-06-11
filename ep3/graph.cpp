@@ -10,21 +10,19 @@
 class Graph {
 private:
     int V;                    // Number of vertices in the graph
-    std::vector<std::vector<int>> weights;  // Weights
     std::vector<std::string> vertices;  // Vertices
     std::vector<std::vector<int>> adj;  // Adjacency list
 
 public:
     // Constructor
-    Graph(int V) : V(V), weights(V, std::vector<int>(V, 0)), vertices(V), adj(V) {}
+    Graph(int V) : V(V), vertices(V), adj(V) {}
 
     void setVertexValue(int vertex, const std::string& value) {
         vertices[vertex] = value;
     }
 
-    void addEdge(int src, int dest, int weight) {
+    void addEdge(int src, int dest) {
         adj[src].push_back(dest);
-        weights[src][dest] = weight;
     }
 
     bool isCyclicUtil(int v, std::vector<bool>& visited, std::vector<bool>& recursionStack) {
@@ -109,46 +107,39 @@ public:
     }
     
     
-    void highestWeightPath(int src, std::vector<int>& path, std::vector<bool>& visited, std::vector<int>& maxPath, int& maxWeight) {
+    void longestPathUtil(int src, std::vector<int>& path, std::vector<bool>& visited, std::vector<int>& maxPath, int& maxDistance) {
         visited[src] = true;
         path.push_back(src);
 
-        if (calculatePathWeight(path) > maxWeight) {
+        if (path.size()-1 > maxDistance) {
             maxPath = path;
-            maxWeight = calculatePathWeight(path);
+            maxDistance = path.size()-1;
         }
 
         for (int neighbor : adj[src]) {
             if (!visited[neighbor])
-                highestWeightPath(neighbor, path, visited, maxPath, maxWeight);
+                longestPathUtil(neighbor, path, visited, maxPath, maxDistance);
         }
 
         path.pop_back();
         visited[src] = false;
     }
 
-    int calculatePathWeight(std::vector<int> path) {
-        int weight = 0;
-        for (int i = 0; i < path.size() - 1; ++i)
-            weight += weights[path[i]][path[i+1]];
-        return weight;
-    }
-
-    void findHighestWeightPath() {
+    void findLongestPath() {
         std::vector<bool> visited(V, false);
         std::vector<int> path, maxPath;
-        int maxWeight = NINF;
+        int maxDistance = 0;
 
         for (int i = 0; i < V; ++i) {
             if (!visited[i])
-                highestWeightPath(i, path, visited, maxPath, maxWeight);
+                longestPathUtil(i, path, visited, maxPath, maxDistance);
         }
 
-        std::cout << "Highest Weight Path: ";
+        std::cout << "Longest Path: ";
         for (int vertex : maxPath)
             std::cout << vertices[vertex] << " ";
         std::cout << std::endl;
-        std::cout << "Total Weight: " << maxWeight << std::endl;
+        std::cout << "Max Distance: " << maxDistance << std::endl;
     }
 
     void topologicalSortUtil(int v, std::vector<bool>& visited, std::stack<int>& stack) {
@@ -160,43 +151,6 @@ public:
         stack.push(v);
     }
 
-void longestPath(int s)
-{
-    std::stack<int> stack;
-    std::vector<bool> visited(V, false);
-    std::vector<int> dist(V, NINF);
-   
-    // Call the recursive helper function to store Topological
-    // Sort starting from all vertices one by one
-    for (int i = 0; i < V; i++)
-        if (!visited[i])
-            topologicalSortUtil(i, visited, stack);
-   
-    // distance to source as 0
-    /*
-    dist[s] =   0;
-
-    // Process vertices in topological order
-    while (stack.empty() == false) {
-        // Get the next vertex from topological order
-        int u = stack.top();
-        stack.pop();
-   
-        // Update distances of all adjacent vertices
-        if (dist[u] != NINF) {
-            for (int adjVertex : adj[u]) {
-                if (dist[adjVertex] < dist[u] + weights[adjVertex])
-                    dist[adjVertex] = dist[u] + weights[adjVertex];
-            }
-        }
-    }
-   
-    // Print the calculated longest distances
-    for (int i = 0; i < V; i++)
-        (dist[i] == NINF) ? std::cout << "INF " : std::cout << dist[i] << " ";
-
-    */
-}
     void printGraph() {
         for (int i = 0; i < V; ++i) {
             std::cout << "Vertex " << i << " (" << vertices[i] << "): ";
@@ -223,14 +177,22 @@ int main() {
     graph.setVertexValue(6, "6");
 
     // Add edges to the graph
-    graph.addEdge(0, 1, 1);
-    graph.addEdge(0, 4, 1);
-    graph.addEdge(1, 3, 1);
-    graph.addEdge(4, 5, 1);
-    graph.addEdge(1, 6, 1);
-    graph.addEdge(6, 5, 1);
-    graph.addEdge(3, 2, 1);
-    graph.addEdge(2, 1, 1);
+    //graph.addEdge(0, 1);
+    //graph.addEdge(0, 4);
+    //graph.addEdge(1, 3);
+    //graph.addEdge(4, 5);
+    //graph.addEdge(1, 6);
+    //graph.addEdge(6, 5);
+    //graph.addEdge(3, 2);
+    //graph.addEdge(2, 1);
+
+    graph.addEdge(0, 1);
+    graph.addEdge(1, 2);
+    graph.addEdge(2, 3);
+    graph.addEdge(3, 4);
+    graph.addEdge(4, 5);
+    graph.addEdge(5, 6);
+    graph.addEdge(6, 2);
 
     // Is it cyclic?
     std::cout << "Cycle?" << std::endl;
@@ -264,6 +226,6 @@ int main() {
 
     // Print the longest path
     //graph.longestPath(0);
-    graph.findHighestWeightPath();
+    graph.findLongestPath();
     return 0;
 }

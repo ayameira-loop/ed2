@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
+#include <stack>
 #include <string>
+
 class Graph {
 private:
     int V;                    // Number of vertices in the graph
@@ -17,29 +19,32 @@ public:
 
     void addEdge(int src, int dest) {
         adj[src].push_back(dest);
-        adj[dest].push_back(src);
     }
-    bool isCyclicDFSUtil(int v, std::vector<bool>& visited, int parent) {
+
+   bool isCyclicUtil(int v, std::vector<bool>& visited, std::vector<bool>& recursionStack) {
         visited[v] = true;
+        recursionStack[v] = true;
 
         for (int adjVertex : adj[v]) {
             if (!visited[adjVertex]) {
-                if (isCyclicDFSUtil(adjVertex, visited, v)) {
+                if (isCyclicUtil(adjVertex, visited, recursionStack)) {
                     return true;
                 }
-            } else if (adjVertex != parent) {
+            } else if (recursionStack[adjVertex]) {
                 return true;
             }
         }
 
+        recursionStack[v] = false;
         return false;
     }
 
     bool isCyclic() {
         std::vector<bool> visited(V, false);
+        std::vector<bool> recursionStack(V, false);
 
         for (int i = 0; i < V; ++i) {
-            if (!visited[i] && isCyclicDFSUtil(i, visited, -1)) {
+            if (!visited[i] && isCyclicUtil(i, visited, recursionStack)) {
                 return true;
             }
         }
@@ -47,107 +52,89 @@ public:
         return false;
     }
 
-    void removeEdge(int src, int dest) {
-        for (auto it = adj[src].begin(); it != adj[src].end(); ++it) {
-            if (*it == dest) {
-                adj[src].erase(it);
-                break;
-            }
-        }
-        for (auto it = adj[dest].begin(); it != adj[dest].end(); ++it) {
-            if (*it == src) {
-                adj[dest].erase(it);
-                break;
-            }
-        }
-    }
-
-    void removeCycleDFS(int v, std::vector<bool>& visited, int parent) {
-        visited[v] = true;
+    void DFS(int v, std::vector<int>& low, std::vector<int>& disc, std::stack<int>& stack, std::vector<bool>& inStack, int& time) {
+        disc[v] = low[v] = ++time;
+        stack.push(v);
+        inStack[v] = true;
 
         for (int adjVertex : adj[v]) {
-            if (!visited[adjVertex]) {
-                removeCycleDFS(adjVertex, visited, v);
-            } else if (adjVertex != parent) {
-                removeEdge(v, adjVertex);
+            if (disc[adjVertex] == -1) {
+                DFS(adjVertex, low, disc, stack, inStack, time);
+                low[v] = std::min(low[v], low[adjVertex]);
+            } else if (inStack[adjVertex]) {
+                low[v] = std::min(low[v], disc[adjVertex]);
             }
         }
-    }
 
-    void removeCycle() {
-        std::vector<bool> visited(V, false);
+        if (low[v] == disc[v]) {
+            // Remove the cycle
+            while (stack.top() != v) {
+                int u = stack.top();
+                stack.pop();
+                inStack[u] = false;
 
-        for (int i = 0; i < V; ++i) {
-            if (!visited[i] && isCyclicDFSUtil(i, visited, -1)) {
-                std::fill(visited.begin(), visited.end(), false);
-                removeCycleDFS(i, visited, -1);
-                break;
-            }
-        }
-    }
-
-    void DFS(int v, std::vector<bool>& visited, int& farthestVertex, int& maxDistance, int distance) {
-        visited[v] = true;
-
-        if (distance > maxDistance) {
-            maxDistance = distance;
-            farthestVertex = v;
-        }
-
-        for (int adjVertex : adj[v]) {
-            if (!visited[adjVertex]) {
-                DFS(adjVertex, visited, farthestVertex, maxDistance, distance + 1);
-            }
-        }
-    }
-
-    int findFarthestVertex(int startVertex) {
-        std::vector<bool> visited(V, false);
-        int farthestVertex = startVertex;
-        int maxDistance = 0;
-
-        DFS(startVertex, visited, farthestVertex, maxDistance, 0);
-
-        return farthestVertex;
-    }
-
-    int printLongestPath() {
-        int u = 0;
-        int v = findFarthestVertex(u);
-        int w = findFarthestVertex(v);
-        printPath(v, w);
-
-    }
-
-    void printPath(int u, int v) {
-        std::vector<int> path;
-        std::vector<bool> visited(V, false);
-        getPathDFS(u, v, visited, path);
-        for (int i = 0; i < path.size(); ++i) {
-            std::cout << vertices[path[i]];
-            if (i != path.size() - 1) {
-                std::cout << " -> ";
-            }
-        }
-    }
-    bool getPathDFS(int u, int v, std::vector<bool>& visited, std::vector<int>& path) {
-        visited[u] = true;
-        path.push_back(u);
-
-        if (u == v) {
-            return true;
-        }
-
-        for (int adjVertex : adj[u]) {
-            if (!visited[adjVertex]) {
-                if (getPathDFS(adjVertex, v, visited, path)) {
-                    return true;
+                // Remove edge u -> v
+                for (auto it = adj[u].begin(); it != adj[u].end(); ++it) {
+                    if (*it == v) {
+                        adj[u].erase(it);
+                        break;
+                    }
                 }
             }
+
+            // Remove v from stack and inStack
+            stack.pop();
+            inStack[v] = false;
+        }
+    }
+
+    void makeAcyclic() {
+        std::vector<int> low(V, -1);         // Low-link values for vertices
+        std::vector<int> disc(V, -1);        // Discovery time of vertices
+        std::vector<bool> inStack(V, false); // Tracks vertices in the recursion stack
+        std::stack<int> stack;
+        int time = 0;
+
+        for (int i = 0; i < V; ++i) {
+            if (disc[i] == -1) {
+                DFS(i, low, disc, stack, inStack, time);
+            }
+        }
+    }
+    
+    void longestPathUtil(int src, std::vector<int>& path, std::vector<bool>& visited, std::vector<int>& maxPath, int& maxDistance) {
+        visited[src] = true;
+        path.push_back(src);
+
+        if (path.size()-1 > maxDistance) {
+            maxPath = path;
+            maxDistance = path.size()-1;
+        }
+
+        for (int neighbor : adj[src]) {
+            if (!visited[neighbor])
+                longestPathUtil(neighbor, path, visited, maxPath, maxDistance);
         }
 
         path.pop_back();
-        return false;
+        visited[src] = false;
+    }
+
+    void findLongestPath() {
+        std::vector<bool> visited(V, false);
+        std::vector<int> path, maxPath;
+        int maxDistance = 0;
+
+        for (int i = 0; i < V; ++i) {
+            if (!visited[i])
+                longestPathUtil(i, path, visited, maxPath, maxDistance);
+        }
+
+        std::cout << "Longest Path: ";
+        for (int vertex : maxPath)
+            std::cout << vertices[vertex] << " ";
+        std::cout << std::endl;
+        std::cout << "Max Distance: " << maxDistance << std::endl;
     }
 
     void printGraph() {
