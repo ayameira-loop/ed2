@@ -47,7 +47,7 @@ int findLargestMatchingSubst(std::string& first, std::string& second, int k) {
 int main() {
     srand(time(0)); // Seed the random number generator
 
-    int N = 150; // Length of DNA string
+    int N = 2500; // Length of DNA string
     /*std::cout << "Enter the length of the DNA string: ";
     std::cin >> N;*/ 
 
@@ -91,7 +91,7 @@ int main() {
     breakIntoChunks(dnaString, startOfChunks, endOfChunks, chunks);
     
     int V = chunks.size();
-    int k = 2;
+    int k = 3;
     Graph G(V);
     std::cout << "Number of vertices: " << V << std::endl;
 
