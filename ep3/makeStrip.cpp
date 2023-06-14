@@ -3,8 +3,8 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
+#include <set>
 #include "Graph.h"
-
 std::string generateDNAString(int N) {
     /* Function to generate random DNA strings of length N */
     std::string dnaString;
@@ -45,6 +45,7 @@ int findLargestMatchingSubst(std::string& first, std::string& second) {
 
 int main() {
     srand(time(0)); // Seed the random number generator
+    //srand(123321); // Seed the random number generator
 
     int N; // Length of DNA string
     std::cout << "Enter the length of the DNA string: ";
@@ -97,7 +98,6 @@ int main() {
 
     Graph G(V);
     std::cout << "Number of vertices: " << V << std::endl;
-
     for (int i = 0; i < chunks.size(); i++) {
         G.setVertexValue(i, chunks[i]);
     }
@@ -105,8 +105,9 @@ int main() {
     for (int i = 0; i < chunks.size(); i++) {
         for (int j = i+1; j < chunks.size(); j++) {
             int L = findLargestMatchingSubst(chunks[i], chunks[j]);
-            if (L >= k)
+            if (L >= k) {
                 G.addEdge(i, j, L);
+            }
         }
     }
 
@@ -130,7 +131,6 @@ int main() {
     std::string reconstructedDNA = "";
 
     for (int vertex : path) {
-        std::cout << vertex << std::endl;
         if (prev != -1)
             reconstructedDNA = reconstructedDNA + G.getValueAt(vertex).substr(G.getWeight(prev,vertex));
         else
