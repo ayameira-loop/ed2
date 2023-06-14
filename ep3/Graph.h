@@ -159,22 +159,39 @@ public:
         int t = 0;
         while (t < V) {
             int u = topOrder[t];
+            //std::cout << "adj[u].size() " << adj[u].size() << std::endl;
+            while (adj[u].size() <= 0 && t < V - 1) {
+                u = topOrder[++t];
+                //std::cout << "new " << t << "new u = " << u << std::endl;
+                dist[u] = 0;
+            }
+            //std::cout << "Processing vertex " << u << std::endl;
+            //std::cout << "dist[u] " << dist[u] << std::endl;
             // Update distances of all adjacent vertices
             if (dist[u] != NINF) {
+                //std::cout << "Checking adjacent vertices of: " << u << std::endl;
                 for (int adjVertex : adj[u]) {
                     int newDist = dist[u] + weights[u][adjVertex];
+                    //std::cout << "new dist: " << newDist << std::endl;
                     if (newDist > dist[adjVertex]) {
+                        //std::cout << prev[adjVertex] << std::endl;
                         dist[adjVertex] = dist[u] + weights[u][adjVertex];
                         prev[adjVertex] = u;
                     }
                 }
             }
             if (dist[u] > maxWeight) {
+                //std::cout << "found new max weight = " << maxWeight << std::endl;
+                //for (int p : prev) {
+                //    std::cout << p << " ";
+                //}
+                
                 maxWeight = dist[u];
                 lastVertex = u;
             }
             t++;
         }
+        //std::cout << "Reconstructing path. Last vertex = " << lastVertex << std::endl;
         // Reconstruct the highest weight path
         std::vector<int> path;
         while (lastVertex != -1) {

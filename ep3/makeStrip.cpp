@@ -3,8 +3,8 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
+#include <set>
 #include "Graph.h"
-
 std::string generateDNAString(int N) {
     /* Function to generate random DNA strings of length N */
     std::string dnaString;
@@ -46,16 +46,17 @@ int findLargestMatchingSubst(std::string& first, std::string& second, int k) {
 
 int main() {
     srand(time(0)); // Seed the random number generator
+    //srand(123321); // Seed the random number generator
 
-    int N = 2500; // Length of DNA string
+    int N = 35; // Length of DNA string
     /*std::cout << "Enter the length of the DNA string: ";
     std::cin >> N;*/ 
 
-    int meanChunkSize = 8; // Mean chunk length
+    int meanChunkSize = 3; // Mean chunk length
     /*std::cout << "Enter the mean chunk length: ";
     std::cin >> meanChunkSize;*/
 
-    int var = 3; // Variance
+    int var = 1; // Variance
     /*std::cout << "Enter the variance: ";
     std::cin >> var;*/
 
@@ -91,10 +92,10 @@ int main() {
     breakIntoChunks(dnaString, startOfChunks, endOfChunks, chunks);
     
     int V = chunks.size();
-    int k = 3;
+
+    int k = 2;
     Graph G(V);
     std::cout << "Number of vertices: " << V << std::endl;
-
     for (int i = 0; i < chunks.size(); i++) {
         G.setVertexValue(i, chunks[i]);
     }
@@ -102,8 +103,10 @@ int main() {
     for (int i = 0; i < chunks.size(); i++) {
         for (int j = i+1; j < chunks.size(); j++) {
             int L = findLargestMatchingSubst(chunks[i], chunks[j], k);
-            if (L >= k)
+            if (L >= k) {
+                //L = 1;
                 G.addEdge(i, j, L);
+            }
         }
     }
 
