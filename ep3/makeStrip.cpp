@@ -3,8 +3,9 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
-#include <set>
+#include <cstdlib>
 #include "Graph.h"
+
 std::string generateDNAString(int N) {
     /* Function to generate random DNA strings of length N */
     std::string dnaString;
@@ -43,25 +44,19 @@ int findLargestMatchingSubst(std::string& first, std::string& second) {
     return highestK;
 }
 
-int main() {
-    srand(time(0)); // Seed the random number generator
-    //srand(123321); // Seed the random number generator
+int main(int argc, char* argv[]) {
+    srand(time(0));
+    //srand(1234);
 
-    int N; // Length of DNA string
-    std::cout << "Enter the length of the DNA string: ";
-    std::cin >> N;
+    if (argc < 5) {
+        std::cout << "Usage: dna <N> <meanChunkSize> <variation> <k>\n";
+        return 1;
+    }
 
-    int meanChunkSize; // Mean chunk length
-    std::cout << "Enter the mean chunk length: ";
-    std::cin >> meanChunkSize;
-
-    int variation; // Variation
-    std::cout << "Enter the Variation: ";
-    std::cin >> variation;
-
-    int k;
-    std::cout << "Enter k: ";
-    std::cin >> k;
+    int N = std::atoi(argv[1]); // Length of DNA string
+    int meanChunkSize = std::atoi(argv[2]); // Mean chunk length
+    int variation = std::atoi(argv[3]); // Variation
+    int k = std::atoi(argv[4]);
 
     std::vector<int> startOfChunks(0);
     std::vector<int> endOfChunks(0);
@@ -87,7 +82,7 @@ int main() {
     }
     
     std::string dnaString = generateDNAString(N);
-    std::cout << "Generated DNA string: " << dnaString << std::endl;
+    std::cout << "Generated DNA string:\n" << dnaString << std::endl;
 
     std::vector<std::string> chunks(0);
 

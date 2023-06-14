@@ -148,9 +148,13 @@ public:
     std::vector<int> findHighestWeightPath() {
         std::vector<int> topOrder = topologicalSort();
         std::vector<int> prev(V, -1);
-        std::vector<int> dist(V, NINF);
+        std::vector<int> dist(V, 0);
         int maxWeight = 0;
         int lastVertex = -1;
+
+        //std::cout << "topological order:" << std::endl;
+        //for (int i = 0; i < topOrder.size(); i++)
+        //    std::cout << topOrder[i] << std::endl;
 
         dist[topOrder[0]] = 0;
 
@@ -160,14 +164,16 @@ public:
             int u = topOrder[t];
             while (adj[u].size() <= 0 && t < V - 1) {
                 u = topOrder[++t];
+                //std::cout << u << std::endl;
                 dist[u] = 0;
             }
             // Update distances of all adjacent vertices
             if (dist[u] != NINF) {
+                //std::cout << "Checando os vértices de " << u << std::endl;
                 for (int adjVertex : adj[u]) {
                     int newDist = dist[u] + weights[u][adjVertex];
                     if (newDist > dist[adjVertex]) {
-                        dist[adjVertex] = dist[u] + weights[u][adjVertex];
+                        dist[adjVertex] = newDist;
                         prev[adjVertex] = u;
                     }
                 }
@@ -185,6 +191,11 @@ public:
             lastVertex = prev[lastVertex];
         }
         std::reverse(path.begin(), path.end());
+
+        //std::cout << "Printing path: " << std::endl;
+        //for (int i = 0; i < path.size(); i++)
+        //    std::cout << path[i] << std::endl;
+
         return path;
     }
 
@@ -192,7 +203,7 @@ public:
         for (int i = 0; i < V; ++i) {
             std::cout << "Vertex " << i << " (" << vertices[i] << "): ";
             for (int j : adj[i]) {
-                std::cout << vertices[j] << " (w: " << weights[i][j] << ") ";
+                std::cout << vertices[j] << "[" << j << "] (w: " << weights[i][j] << ") ";
             }
             std::cout << std::endl;
         }
