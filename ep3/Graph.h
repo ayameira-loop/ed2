@@ -9,13 +9,12 @@
 
 class Graph {
 private:
-    int V;                    // Number of vertices in the graph
-    std::vector<std::string> vertices;  // Vertices
-    std::vector<std::vector<int>> weights;  // Weights
-    std::vector<std::vector<int>> adj;  // Adjacency list
+    int V;
+    std::vector<std::string> vertices;
+    std::vector<std::vector<int>> weights;
+    std::vector<std::vector<int>> adj;
 
 public:
-    // Constructor
     Graph(int V) : V(V), weights(V, std::vector<int>(V, 0)), vertices(V), adj(V) {}
 
     std::string getValueAt(int vertex) {
