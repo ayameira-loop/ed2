@@ -45,8 +45,8 @@ int findLargestMatchingSubst(std::string& first, std::string& second) {
 }
 
 int main(int argc, char* argv[]) {
-    srand(time(0));
-    //srand(1234);
+    //srand(time(0));
+    srand(1234);
 
     if (argc < 5) {
         std::cout << "Usage: dna <N> <meanChunkSize> <variation> <k>\n";
@@ -133,6 +133,7 @@ int main(int argc, char* argv[]) {
         prev = vertex;
     }
 
+    std::cout << "Reconstructed DNA string: " << std::endl;
     std::cout << reconstructedDNA << std::endl;
 
 

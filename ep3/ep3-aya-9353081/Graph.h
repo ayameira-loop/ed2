@@ -148,7 +148,7 @@ public:
     std::vector<int> findHighestWeightPath() {
         std::vector<int> topOrder = topologicalSort();
         std::vector<int> prev(V, -1);
-        std::vector<int> dist(V, 0);
+        std::vector<int> dist(V, -1);
         int maxWeight = 0;
         int lastVertex = -1;
 
