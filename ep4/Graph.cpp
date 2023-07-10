@@ -21,9 +21,9 @@ public:
         return regex;
     }
 
-    void dfs(int vertex, std::vector<bool>&marked){
+    void dfs(int vertex, std::vector<bool>&marked) {
         marked[vertex] = true;
-        for (int i=0; i < adj[vertex].size(); i++){
+        for (int i=0; i < adj[vertex].size(); i++) {
             if (!marked[adj[vertex][i]])
                 dfs(adj[vertex][i], marked);
         }
@@ -55,39 +55,45 @@ public:
     void createNFA() {
         for (int i = 0; i < regex.length(); i++)
             setVertexValue(i, regex[i]);
-        
-        std::stack<int> pilha;
 
-        int ant = 0;
-        for (int i = 0; i < regex.length(); i++) {
-            if (regex[i] == '(' || regex[i] == '|') {
-                //if (regex[i] == '(' && i < regex.length()-1)
-                    //addEdge(i, i+1); 
-                pilha.push(i);
-            } else {         
-                //if (isalpha(regex[i]))  continue;       
-                if (regex[i] == ')') {
-                    int cartopo = pilha.top();
-                    pilha.pop();
-                    if (regex[cartopo] == '|') {
-                        ant = pilha.top();
-                        pilha.pop();
-                        addEdge(ant, cartopo+1);
-                        addEdge(cartopo, i+1);
-                    } else {
-                        ant = cartopo;
+        std::stack<int>symbols;
+        std::stack<int>parenthesis;
+        for (int i=0; i < regex.length(); i++) {
+            int ant = i;
+
+            if (regex[i] == '\\') {
+                addEdge(i, i+1);
+                i++;
+            }
+
+            else if (regex[i] == '(' || regex[i] == '|') {
+                if (regex[i] == '(') parenthesis.push(i);
+                symbols.push(i);
+            }
+
+            else if (regex[i] == ')') {
+                while (regex[symbols.top()] != '(') {
+                    int top = symbols.top();
+                    symbols.pop();
+                    if (regex[top] == '|') {
+                        addEdge(top, i);
+                        addEdge(parenthesis.top(), top+1);
                     }
                 }
-                if (i < regex.length()-1 && regex[i+1] == '*') {
-                    std::cout << "should connect to " << ant << std::endl;
-                    addEdge(ant, i+1);
-                    addEdge(i+1, ant);
-                }
-                if (i < regex.length()-1 && (regex[i] == ')' || regex[i] == '*' || regex[i] == '('))
-                    addEdge(i, i+1);
+                ant = symbols.top();
+                symbols.pop();
+                parenthesis.pop();
             }
-            ant = i;
+
+            if (i < regex.length()-1 && regex[i+1] == '*') {
+                addEdge(ant, i+1);
+                addEdge(i+1, ant);
+            }
+
+            if (regex[i] == '(' || regex[i] == ')' || regex[i] == '*')
+                addEdge(i, i+1);
         }
+
     }
 
     void printGraph() {
