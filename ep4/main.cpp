@@ -15,7 +15,6 @@ bool reconhece(string word, Graph G) {
         for (int j=0; j < atingidos.size()-1; j++) {
             if (atingidos[j] && (regex[j] == word[i] || regex[j] == '.')) {
                 prox[j+1] = true;
-                cout << "leio " << regex[j] << endl;
             }
         }
         vector<bool> marc(G.size());
@@ -34,8 +33,8 @@ bool reconhece(string word, Graph G) {
 }
 
 string treatRegex(string regex) {
-    stack<char> newString;
     stack<int> brackets;
+    vector<int> paranthesis;
 
     
     for (int i=0; i<regex.length(); i++) {
@@ -105,23 +104,53 @@ string treatRegex(string regex) {
         regex.replace(start, end - start + 1, "(" + expandedSubset + ")");
         cout << regex << endl;    
     }
-    return regex;
-    // conjuntos []
-    // intervalos [-]
-    // complementos [^]
+    
     // um ou mais +
-
+    for (int i=1; i<regex.length(); i++) {
+        if (regex[i] == '+' && regex[i-1] != '\\') {
+            cout << "found a plus sign" << endl;
+            string expression = "";
+            if (regex[i-1] == ')') {
+                int closeP = i-1; 
+                int openP = 0; 
+                int close = 0;
+                int open = 0;
+                for (int j=(i-1); j >= 0; j--) {
+                    if (regex[j] == ')')
+                        close++;
+                    if (regex[j] == '(')
+                        open++;
+                    if (open == close) {
+                        openP = j;
+                        break;
+                    }
+                }
+                cout << openP << endl;
+                for (int j=openP; j<=closeP; j++) {
+                    expression += (regex[j]);
+                }
+            } else {
+                expression += (regex[i-1]); 
+            }
+            expression+='*';
+            cout << "new expression " << expression << endl;
+            regex.replace(i, 1, expression);
+            cout << "new regex " << regex << endl;
+        }
+    }
+    cout << regex << endl;
+    return regex;
 }
 int main(void) {
-    string re = "[^AEIOU][AEIOU][^AEIOU][AEIOU]";
-
+    string re = "(([a-z])*|([0-9])*)*@(([a-z])+\\.)+br";
+    //string re = "([0-3]+)([a-c]+)";
     string regex = treatRegex(re);
 
     Graph G(regex.length()+1, regex);
     G.createNFA();
     G.printGraph();
 
-    string word = "BELO";
+    string word = "thilio@bbb.com";
     cout << "reconhece '" << word << "'?" << endl;
     cout << reconhece(word, G) << endl;
     return 0;
