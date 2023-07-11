@@ -37,7 +37,6 @@ string treatRegex(string regex) {
     stack<char> newString;
     stack<int> brackets;
 
-    std::string output = regex;
     
     for (int i=0; i<regex.length(); i++) {
         if (regex[i] == '[') {
@@ -54,7 +53,7 @@ string treatRegex(string regex) {
         int start = brackets.top();
         brackets.pop();
         substring = regex.substr(start + 1, end - start - 1);
-        // Checa se é um conjunto ou intervalo
+        // Checa se é um conjunto ou intervalo ou complemento
         string expandedSubset = "";
         if (substring.length() > 2 && substring[1] == '-') {
             // intervalo
@@ -68,6 +67,32 @@ string treatRegex(string regex) {
                     expandedSubset += '|';
                 }
             }
+        } else  if (substring.length() > 1 && substring[0] == '^') { // complemento
+            char c = substring[1];
+            char startChar = static_cast<char>(0);
+            char endChar = static_cast<char>(127);
+            if (isalpha(c)) {
+                if (islower(c)) {
+                    startChar = 'a';
+                    endChar = 'z';
+                } else if (isupper(c)) {
+                    startChar = 'A';
+                    endChar = 'Z';
+                }
+            } else if (isdigit(c)) {
+                startChar = '0';
+                endChar = '9';
+
+            }
+            for (char c = startChar; c <= endChar; c++) {
+                if (substring.find(c) == std::string::npos) {
+                    expandedSubset += c;
+                    if (c != endChar) {
+                        expandedSubset += '|';
+                    }
+                }
+            }            
+
         } else {
             // conjunto
             for (int i=0; i < substring.length(); i++) {
@@ -77,8 +102,7 @@ string treatRegex(string regex) {
                 }
             }
         }
-        //regex.replace(start, end - start + 1, "(" + expandedSubset + ")");
-        regex.replace(start, end - start + 1, expandedSubset);
+        regex.replace(start, end - start + 1, "(" + expandedSubset + ")");
         cout << regex << endl;    
     }
     return regex;
@@ -89,7 +113,7 @@ string treatRegex(string regex) {
 
 }
 int main(void) {
-    string re = "a|b";
+    string re = "[^AEIOU][AEIOU][^AEIOU][AEIOU]";
 
     string regex = treatRegex(re);
 
@@ -97,9 +121,8 @@ int main(void) {
     G.createNFA();
     G.printGraph();
 
-    string word = "aaa";
+    string word = "BELO";
     cout << "reconhece '" << word << "'?" << endl;
     cout << reconhece(word, G) << endl;
-
     return 0;
 } 

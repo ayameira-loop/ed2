@@ -100,7 +100,7 @@ public:
         for (int i = 0; i < V; ++i) {
             std::cout << "Vertex " << i << " '" << vertices[i] << "': ";
             for (int j : adj[i]) {
-                std::cout << vertices[j] << " ";
+                std::cout << j << ":" << vertices[j] << " ";
             }
             std::cout << std::endl;
         }
